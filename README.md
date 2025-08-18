@@ -51,4 +51,4 @@ For questions or support, just [email me](mailto:hello@lchristmann.com).
 
 ### Contribution
 
-See the [Contribution Guide](docs/CONTRIBUTION-GUIDE.md).
+See the [Contribution Guide](docs/CONTRIBUTION-GUIDE.md) and the [Developer Docs](DEVELOPER-DOCS.md).
