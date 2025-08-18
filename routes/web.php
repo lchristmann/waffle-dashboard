@@ -25,19 +25,6 @@ Route::get('/health', function () {
         $status['database'] = 'Error';
     }
 
-    // Check Redis Connection
-    try {
-        Cache::store('redis')->put('health_check', 'OK', 10);
-        $value = Cache::store('redis')->get('health_check');
-        if ($value === 'OK') {
-            $status['redis'] = 'OK';
-        } else {
-            $status['redis'] = 'Error';
-        }
-    } catch (\Exception $e) {
-        $status['redis'] = 'Error';
-    }
-
     // Check Storage Access
     try {
         $testFile = 'health_check.txt';

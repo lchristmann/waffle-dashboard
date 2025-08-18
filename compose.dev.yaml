@@ -83,11 +83,6 @@ services:
     networks:
       - laravel-development
 
-  redis:
-    image: redis:alpine
-    networks:
-      - laravel-development
-
 networks:
   laravel-development:
 
