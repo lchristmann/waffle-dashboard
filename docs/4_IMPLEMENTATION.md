@@ -73,3 +73,18 @@ Some helpful documentation pages:
 - https://filamentphp.com/docs/4.x/forms/overview
 - https://filamentphp.com/docs/4.x/resources/overview#authorization
 - https://filamentphp.com/docs/4.x/navigation/overview#disabling-resource-or-page-navigation-items
+
+> Commits:
+>
+> - `6f7e9b71`: `feat: add the users CRUD page (only for admins)`
+
+## 5. Enhance the users CRUD page (only for admins)
+
+There are [Relation Managers](https://filamentphp.com/docs/4.x/resources/managing-relationships#relation-managers---interactive-tables-underneath-your-resource-forms)
+in Filament, which are interactive tables below resources that allow managing related records without leaving
+the resource's Edit or View page.
+
+Let's use that to always have a table of all WaffleEating records below the User View/Edit form,
+when the admin  clicks on a user on the CRUD page. Very practical, to be able to manage it here straight-away!
+
+- create the [relationship manager](https://filamentphp.com/docs/4.x/resources/managing-relationships#creating-a-relation-manager) (`php artisan make:filament-relation-manager UserResource waffleEatings date`)
