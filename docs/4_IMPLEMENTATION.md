@@ -56,3 +56,20 @@ looking into the database, that the `is_admin` flag is set to `true` for that us
   - write the data seeding
 
 Now I just run `php artisan migrate:fresh --seed` and there's my admin user and some more data in the database.
+
+> Commits:
+>
+> - `fe6b31d0`: `feat: add profile page, setup: complete models, migrations, factories & seeder`
+
+## 4. Add the users CRUD page (only for admins)
+
+- add the Users CRUD (`php artisan make:filament-resource User`) and customize it
+- make it only accessible to admins via a UserPolicy (`php artisan make:policy UserPolicy`) and the `UserResource#shouldRegisterNavigation` method
+
+Some helpful documentation pages:
+
+- https://filamentphp.com/docs/4.x/resources/overview
+- https://filamentphp.com/docs/4.x/tables/overview
+- https://filamentphp.com/docs/4.x/forms/overview
+- https://filamentphp.com/docs/4.x/resources/overview#authorization
+- https://filamentphp.com/docs/4.x/navigation/overview#disabling-resource-or-page-navigation-items
