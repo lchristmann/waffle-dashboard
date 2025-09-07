@@ -28,6 +28,7 @@ class MainPanelProvider extends PanelProvider
             ->id('main')
             ->path('')
             ->login()
+            ->profile()
             ->colors([
                 'primary' => Color::Amber,
             ])

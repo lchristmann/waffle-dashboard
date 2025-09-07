@@ -17,8 +17,12 @@ that implements exactly the architecture proposed in [3_ARCHITECTURE/4.3 System 
 
 It is documented how to work with it in the [Developer Docs](../DEVELOPER-DOCS.md) and the [Base Project README](BASE-PROJECT-README.md).
 
-After adding the fresh Laravel+Docker project (Commit `c7030c2`: `setup: add fresh Laravel+Docker project`),
-I removed Redis from it, because I won't need it (Commit `a278548`: `setup: remove Redis`).
+After adding the fresh Laravel+Docker project, I removed Redis from it, because I won't need it.
+
+> Commits:
+> 
+> - `c7030c28`: `setup: add fresh Laravel+Docker project`
+> - `a2785485`: `setup: remove Redis`
 
 ## 2. Install Filament and create Artisan command for making admin users
 
@@ -37,3 +41,18 @@ php artisan filament:install --panels
 
 After that I created myself an admin user, checked that I could access the panel at `http://localhost` and verified by
 looking into the database, that the `is_admin` flag is set to `true` for that user.
+
+> Commits:
+>
+> - `03ff8935`: `setup: install filament, implement admin users, remove Redis from .env`
+
+## 3. Add profile page and fully implement the data model
+
+- add `->profile()` in the `MainPanelProvider` to enable Filament v4's built-in profile page for users
+- according to the database schema shown in [3_ARCHITECTURE/4.4. Data Model](3_ARCHITECTURE.md#44-data-model), for the `User` and `WaffleEating` entities
+  - create/adapt the migrations
+  - create/adapt the models
+  - create/adapt the factories
+  - write the data seeding
+
+Now I just run `php artisan migrate:fresh --seed` and there's my admin user and some more data in the database.
