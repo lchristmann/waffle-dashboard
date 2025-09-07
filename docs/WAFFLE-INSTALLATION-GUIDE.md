@@ -19,6 +19,15 @@ Many hosting providers give you both in one go, allowing you to select `Docker C
 
 ## Basic Setup
 
+...
+
+Now you can create your first admin user:
+
+````shell
+docker compose exec php-fpm bash
+php artisan make:filament-admin
+````
+
 ## Secure your Waffles (HTPS)
 
 ## Waffle Upgrade Guide

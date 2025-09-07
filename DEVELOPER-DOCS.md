@@ -65,7 +65,8 @@ docker compose -f compose.dev.yaml exec workspace bash
 docker compose -f compose.dev.yaml exec postgres bash
   psql -d app -U laravel # password: secret
   \dt
-  \d tablename
+  \d users
+  SELECT * FROM users;
 ```
 
 ## Setting Up the Development Environment
