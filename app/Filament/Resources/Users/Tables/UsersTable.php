@@ -18,11 +18,9 @@ class UsersTable
             ->columns([
                 TextColumn::make('name')->searchable()->sortable(),
                 TextColumn::make('email')->searchable()->sortable(),
-                IconColumn::make('is_admin')
-                    ->label('Admin')
-                    ->boolean()
-                    ->sortable()
-                    ->falseColor('gray'),
+                IconColumn::make('is_admin')->label('Admin')->boolean()->sortable()->falseColor('gray'),
+                TextColumn::make('created_at')->dateTime()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('updated_at')->dateTime()->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //

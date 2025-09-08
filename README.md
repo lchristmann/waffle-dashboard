@@ -14,8 +14,8 @@ The Waffle Dashboard is a lightweight, self-hostable application for tracking an
   - [Design (Mockups)](#design-mockups)
   - [Architecture](#architecture)
   - [Implementation](#implementation)
-  - [Maintenance](#maintenance)
-  - [Contribution](#contribution)
+- [Maintenance](#maintenance)
+- [Contribution](#contribution)
 
 ## Get the Waffle Dashboard
 
@@ -43,12 +43,12 @@ See [docs/3_ARCHITECTURE.md](docs/3_ARCHITECTURE.md).
 
 See [docs/4_IMPLEMENTATION.md](docs/4_IMPLEMENTATION.md).
 
-### Maintenance
+## Maintenance
 
 This project actively maintained by [me](https://github.com/lchristmann).
 
 For questions or support, just [email me](mailto:hello@lchristmann.com).
 
-### Contribution
+## Contribution
 
 See the [Contribution Guide](docs/CONTRIBUTION-GUIDE.md) and the [Developer Docs](DEVELOPER-DOCS.md).

@@ -22,7 +22,7 @@ class WaffleEatingsRelationManager extends RelationManager
     {
         return $schema
             ->components([
-                DatePicker::make('date')->required()->minDate(now()->subYears(100))->maxDate(now()),
+                DatePicker::make('date')->required()->maxDate(now())->minDate(now()->subYears(100)),
                 TextInput::make('count')->required()->numeric()->minValue(1),
             ]);
     }
@@ -35,8 +35,8 @@ class WaffleEatingsRelationManager extends RelationManager
                 TextColumn::make('date')->date()->sortable(),
                 TextColumn::make('count')->sortable(),
                 TextColumn::make('enteredBy.name')->label('Entered by')->sortable()->toggleable(),
-                TextColumn::make('created_at')->dateTime()->toggleable(),
-                TextColumn::make('updated_at')->dateTime()->toggleable(),
+                TextColumn::make('created_at')->dateTime()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('updated_at')->dateTime()->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('date', 'desc')
             ->filters([

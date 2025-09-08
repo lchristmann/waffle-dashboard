@@ -48,11 +48,12 @@ class DatabaseSeeder extends Seeder
         $allUsers = User::all();
         WaffleEating::factory()
             ->count(20)
-            ->make() // create in memory so we can assign random IDs
-            ->each(function (WaffleEating $record) use ($allUsers) {
-                $record->user_id = $allUsers->random()->id;            // eater
-                $record->entered_by_user_id = $allUsers->random()->id; // entered by
-                $record->save();
-            });
+            ->state(function () use ($allUsers) {
+                return [
+                    'user_id' => $allUsers->random()->id,           // eater
+                    'entered_by_user_id' => $allUsers->random()->id, // who entered
+                ];
+            })
+            ->create();
     }
 }

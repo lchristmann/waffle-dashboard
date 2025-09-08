@@ -102,3 +102,35 @@ Some helpful documentation pages:
 
 - https://filamentphp.com/docs/4.x/actions/create#customizing-data-before-saving
 - https://filamentphp.com/docs/4.x/tables/overview#accessing-related-data-from-columns
+
+> Commits:
+>
+> - `1288e4cc`: `fix: use user_id for who ate the waffles & entered_by_user_id for who entered the record`
+
+## 7. Add the waffles CRUD page
+
+- add the WaffleEating CRUD (`php artisan make:filament-resource WaffleEating`) and customize it
+  - implement search and filters for the CRUD table
+- restrict access via a WaffleEatingPolicy (`php artisan make:policy WaffleEatingPolicy`)
+- have the `created_at` and `updated_at` columns in all resource tables, but hidden by default
+- fix the `DatabaseSeeder.php`: while creating the 20 random WaffleEating records, it created 2 x 20 new users (unintended)
+- after create/edit of a record, redirect to the listing table (implemented in `MainPanelProvider.php`)
+
+Some helpful documentation pages:
+
+- https://filamentphp.com/docs/4.x/resources/creating-records#customizing-data-before-saving
+- https://filamentphp.com/docs/4.x/resources/editing-records#customizing-data-before-saving
+- https://filamentphp.com/docs/4.x/tables/filters/overview
+- https://filamentphp.com/docs/4.x/tables/filters/select
+- https://filamentphp.com/docs/4.x/tables/filters/query-builder#creating-custom-operators (`->query()` method)
+- https://filamentphp.com/docs/4.x/tables/columns/overview#making-toggleable-columns-hidden-by-default
+
+Interesting observation:
+
+Here, setting the `entered_by_user_id` using the `->mutateDataUsing()` function as done in the previous commit in the `WaffleEatingsRelationManager.php` did not work at all.
+
+- I tried chaining that method on the `CreateAction::make()` in `Pages/ListWaffleEatings.php`, where it is defined, but it did not work.
+- Similarly, chaining it on the `EditAction::make()` in `Tables/WaffleEatingsTable.php` did do anything.
+
+The solution that worked was to define `mutateFormDataBeforeCreate()` and `mutateFormDataBeforeSave()` methods in the
+`Pages/CreateWaffleEating.php` and `Pages/EditWaffleEating.php`.
