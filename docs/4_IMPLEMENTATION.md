@@ -134,3 +134,17 @@ Here, setting the `entered_by_user_id` using the `->mutateDataUsing()` function 
 
 The solution that worked was to define `mutateFormDataBeforeCreate()` and `mutateFormDataBeforeSave()` methods in the
 `Pages/CreateWaffleEating.php` and `Pages/EditWaffleEating.php`.
+
+> Commits:
+>
+> - `d36e6264`: `feat: add the waffles CRUD page`
+
+## 8. Add the leaderboard page
+
+- add the leaderboard as a Custom Page in Filament (`php artisan make:filament-page Leaderboard`)
+
+Some helpful documentation pages:
+
+- https://filamentphp.com/docs/4.x/navigation/custom-pages
+- https://filamentphp.com/docs/4.x/tables/custom-data
+- https://filamentphp.com/docs/4.x/tables/columns/overview#setting-the-state-of-a-column

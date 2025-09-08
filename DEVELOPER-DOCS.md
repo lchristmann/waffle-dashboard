@@ -62,6 +62,7 @@ docker compose -f compose.dev.yaml exec postgres bash
   \dt
   \d users
   SELECT * FROM users;
+  SELECT SUM(count) FROM waffle_eatings WHERE date_part('year', date) = 2025 AND user_id = (SELECT id FROM users WHERE name = 'Admin');
 ```
 
 ## Setting Up the Development Environment

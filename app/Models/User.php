@@ -63,6 +63,14 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(WaffleEating::class, 'entered_by_user_id');
     }
 
+    // Waffles this user ate in a given year
+    public function wafflesEatenInYear(int $year): int
+    {
+        return $this->waffleEatings()
+            ->whereYear('date', $year)
+            ->sum('count');
+    }
+
     public function isAdmin(): bool
     {
         return $this->is_admin;
