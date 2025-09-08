@@ -23,7 +23,8 @@ class DatabaseSeeder extends Seeder
                 WaffleEating::factory()
                     ->count(rand(0, 10))
                     ->create([
-                        'entered_by_user' => $user->id,
+                        'user_id' => $user->id,                 // they ate
+                        'entered_by_user_id' => $user->id,      // they entered them
                     ]);
             });
 
@@ -39,7 +40,19 @@ class DatabaseSeeder extends Seeder
         WaffleEating::factory()
             ->count(5)
             ->create([
-                'entered_by_user' => $admin->id,
+                'user_id' => $admin->id,                     // admin ate them
+                'entered_by_user_id' => $admin->id,          // admin entered them
             ]);
+
+        // Create 20 random waffle eating records
+        $allUsers = User::all();
+        WaffleEating::factory()
+            ->count(20)
+            ->make() // create in memory so we can assign random IDs
+            ->each(function (WaffleEating $record) use ($allUsers) {
+                $record->user_id = $allUsers->random()->id;            // eater
+                $record->entered_by_user_id = $allUsers->random()->id; // entered by
+                $record->save();
+            });
     }
 }

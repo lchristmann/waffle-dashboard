@@ -20,7 +20,12 @@ class WaffleEatingFactory extends Factory
         return [
             'date' => fake()->dateTimeBetween('-1 year')->format('Y-m-d'),
             'count' => fake()->numberBetween(1, 10),
-            'entered_by_user' => User::factory(), // creates a user if none is provided
+
+            // who ate the waffles
+            'user_id' => User::factory(), // creates a user if none is provided
+
+            // who entered the record
+            'entered_by_user_id' => User::factory(), // creates a user if none is provided
         ];
     }
 }

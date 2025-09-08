@@ -41,11 +41,6 @@ If these commands do not return the versions, install Docker and Docker Compose 
 docker compose -f compose.dev.yaml up -d # Start the setup
 ```
 
-```shell
-docker compose -f compose.dev.yaml exec workspace bash
-npm run dev
-```
-
 Access the application at [http://localhost](http://localhost).
 
 ```shell
@@ -92,8 +87,6 @@ docker compose -f compose.dev.yaml up -d
 ```bash
 docker compose -f compose.dev.yaml exec workspace bash
 composer install
-npm install
-npm run dev
 ```
 
 4. Run Migrations:
@@ -111,11 +104,6 @@ docker compose -f compose.dev.yaml exec workspace php artisan key:generate
 ```bash
 docker compose -f compose.dev.yaml down
 docker compose -f compose.dev.yaml up -d
-```
-
-```bash
-docker compose -f compose.dev.yaml exec workspace bash
-npm run dev
 ```
 
 6. Access the Application:

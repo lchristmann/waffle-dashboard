@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('waffle_eatings', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->date('date');
             $table->integer('count');
-            $table->foreignId('entered_by_user')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('entered_by_user_id')->constrained('users');
             $table->timestamps();
         });
     }

@@ -51,9 +51,16 @@ class User extends Authenticatable implements FilamentUser
         ];
     }
 
+    // Waffles this user ate
     public function waffleEatings(): HasMany
     {
-        return $this->hasMany(WaffleEating::class, 'entered_by_user');
+        return $this->hasMany(WaffleEating::class, 'user_id');
+    }
+
+    // Waffles this user entered (for themselves or others)
+    public function enteredWaffleEatings(): HasMany
+    {
+        return $this->hasMany(WaffleEating::class, 'entered_by_user_id');
     }
 
     public function isAdmin(): bool

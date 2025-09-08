@@ -12,9 +12,10 @@ class WaffleEating extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'date',
         'count',
-        'entered_by_user',
+        'entered_by_user_id',
     ];
 
     protected $casts = [
@@ -23,6 +24,11 @@ class WaffleEating extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'entered_by_user');
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function enteredBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'entered_by_user_id');
     }
 }

@@ -88,3 +88,17 @@ Let's use that to always have a table of all WaffleEating records below the User
 when the admin  clicks on a user on the CRUD page. Very practical, to be able to manage it here straight-away!
 
 - create the [relationship manager](https://filamentphp.com/docs/4.x/resources/managing-relationships#creating-a-relation-manager) (`php artisan make:filament-relation-manager UserResource waffleEatings date`)
+
+> Commits:
+>
+> - `e425416a`: `feat: add relationship manager to the users CRUD page (only for admins)`
+
+## 6. Fix user -> waffleEating FK relation
+
+- it's supposed to be a `user_id` for who ate the waffles and the `entered_by_user_id` for who entered the WaffleEating record -> implement that fix
+- remove the vite server (`npm install` & `npm run dev`) from the developer docs, because we don't need/use it (Filament v4’s core CSS and JS assets are prebuilt and published in the `public` folder)
+
+Some helpful documentation pages:
+
+- https://filamentphp.com/docs/4.x/actions/create#customizing-data-before-saving
+- https://filamentphp.com/docs/4.x/tables/overview#accessing-related-data-from-columns

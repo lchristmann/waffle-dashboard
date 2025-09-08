@@ -23,7 +23,7 @@ class WaffleEatingsRelationManager extends RelationManager
         return $schema
             ->components([
                 DatePicker::make('date')->required()->minDate(now()->subYears(100))->maxDate(now()),
-                TextInput::make('count')->required()->numeric(),
+                TextInput::make('count')->required()->numeric()->minValue(1),
             ]);
     }
 
@@ -34,18 +34,27 @@ class WaffleEatingsRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('date')->date()->sortable(),
                 TextColumn::make('count')->sortable(),
-                TextColumn::make('created_at')->dateTime(),
-                TextColumn::make('updated_at')->dateTime(),
+                TextColumn::make('enteredBy.name')->label('Entered by')->sortable()->toggleable(),
+                TextColumn::make('created_at')->dateTime()->toggleable(),
+                TextColumn::make('updated_at')->dateTime()->toggleable(),
             ])
             ->defaultSort('date', 'desc')
             ->filters([
                 //
             ])
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()
+                    ->mutateDataUsing(function (array $data): array {
+                        $data['entered_by_user_id'] = auth()->id();
+                        return $data;
+                    }),
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()
+                    ->mutateDataUsing(function (array $data): array {
+                        $data['entered_by_user_id'] = auth()->id();
+                        return $data;
+                    }),
                 DeleteAction::make(),
             ])
             ->toolbarActions([
