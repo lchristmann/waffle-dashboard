@@ -6,6 +6,9 @@
 
 The Waffle Dashboard is a lightweight, self-hostable application for tracking and celebrating your team/family/friend group's waffle consumption. It provides stats, leaderboards, and input forms to capture waffle-eating achievements.
 
+![screenshot of the waffle dashboard](docs/screenshots/dashboard.png)
+_Check out the [docs/screenshots](docs/screenshots) folder._
+
 ## Table of Contents <!-- omit in toc -->
 
 - [Get the Waffle Dashboard](#get-the-waffle-dashboard)

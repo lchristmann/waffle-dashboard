@@ -211,3 +211,11 @@ Let's have one year filter for the whole dashboard (using it across all data-dis
 Some helpful documentation pages:
 
 - https://filamentphp.com/docs/4.x/widgets/overview#filtering-widget-data
+
+> Commits:
+>
+> - `6fff59c0`: `feat: add global year filter to the dashboard, remove 2 widget-specific filters`
+
+## 13. Finished application!! Let's have screenshots.
+
+For you to be able to get a quick impression of how the waffle dashboard software looks like, I'll add some images. 
