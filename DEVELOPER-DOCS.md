@@ -22,6 +22,10 @@ The past development is documented in the [4_IMPLEMENTATION.md](docs/4_IMPLEMENT
   - [Rebuild Containers:](#rebuild-containers)
   - [Stop Containers:](#stop-containers)
   - [View Logs:](#view-logs)
+- [How to Release](#how-to-release)
+  - [Test the new release](#test-the-new-release)
+  - [Make the new release available to the public](#make-the-new-release-available-to-the-public)
+  - [Release the Nginx Image (rarely needed)](#release-the-nginx-image-rarely-needed)
 
 ## Prerequisites
 Ensure you have Docker and Docker Compose installed. You can verify by running:
@@ -163,3 +167,87 @@ For specific services, you can use:
 ```bash
 docker compose -f compose.dev.yaml logs -f web
 ```
+
+## How to Release
+
+The application code must be containerized as shown within the `compose.prod.yaml` `web` service
+and published to the Docker Hub repository [leanderchristmann/waffle-dashboard](https://hub.docker.com/repository/docker/leanderchristmann/waffle-dashboard/general).
+
+```shell
+docker login
+```
+
+Set a version that you want to release:
+
+```shell
+VERSION=1.0.0
+```
+
+Then build, tag and push the docker image:
+
+```shell
+docker build \
+  -f ./docker/common/php-fpm/Dockerfile \
+  --target production \
+  -t leanderchristmann/waffle-dashboard:${VERSION} \
+  -t leanderchristmann/waffle-dashboard:latest \
+  .
+```
+
+```shell
+docker push leanderchristmann/waffle-dashboard:${VERSION}
+docker push leanderchristmann/waffle-dashboard:latest
+```
+
+Now commit your changed code.
+
+Also tag the Git release:
+
+```shell
+git tag -a "${VERSION}" -m "Release ${VERSION}"
+git push origin "${VERSION}"
+```
+
+Finally, [create a GitHub release](https://github.com/lchristmann/selfhosted-waffle-dashboard/releases) via the GitHub UI -
+it's takes the Git tag and lets you add some meta-information to it.
+Give a title like `2.1.0`, a heading like `## What's Changed` and put a bullet point list of changes.
+
+### Test the new release
+
+In the docker-compose.yml **on your server**, bump up the version to what you've just released.
+
+```yaml
+php-fpm:
+    image: leanderchristmann/waffle-dashboard:2.0.0 # increase this
+```
+
+### Make the new release available to the public
+
+Make this same adaptation (see previous section [Test the new release](#test-the-new-release)) to the `docker-compose.yaml` **in this repository** and push it (simple git commit).
+Now everybody following the setup guide, gets the new version of the Waffle Dashboard.
+
+```yaml
+php-fpm:
+    image: leanderchristmann/waffle-dashboard:2.0.0 # increase this
+```
+
+### Release the Nginx Image (rarely needed)
+
+```shell
+VERSION=1.0.0 # Set a version that you want to release
+```
+
+```shell
+docker build \
+  -f ./docker/production/nginx/Dockerfile \
+  -t leanderchristmann/waffle-dashboard-nginx:${VERSION} \
+  -t leanderchristmann/waffle-dashboard-nginx:latest \
+  .
+```
+
+```shell
+docker push leanderchristmann/waffle-dashboard-nginx:${VERSION}
+docker push leanderchristmann/waffle-dashboard-nginx:latest
+```
+
+Then put that version (`leanderchristmann/waffle-dashboard-nginx:X.X.X`) in the `docker-compose.yaml` file.

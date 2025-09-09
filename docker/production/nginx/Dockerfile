@@ -1,18 +1,30 @@
 # Stage 1: Build assets
-FROM debian AS builder
+FROM php:8.4-cli AS builder
 
 # Install Node.js and build tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
+    unzip \
+    libicu-dev \
+    libzip-dev \
     nodejs \
     npm \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Install required PHP extensions
+RUN docker-php-ext-install intl zip
+
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Set working directory
 WORKDIR /var/www
 
 # Copy Laravel application code
 COPY . /var/www
+
+# Install PHP dependencies - this is only necessary because the @tailwindcss/vite:generate:build command (during npm build) depends on filament content in the vendor folder
+RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
 # Install Node.js dependencies and build assets
 RUN npm install && npm run build

@@ -219,3 +219,14 @@ Some helpful documentation pages:
 ## 13. Finished application!! Let's have screenshots.
 
 For you to be able to get a quick impression of how the waffle dashboard software looks like, I'll add some images. 
+
+> Commits:
+>
+> - `1f687d08`: `docs: upload screenshots of the application`
+
+## 14. Release the software - Part 1
+
+- build and publish the Docker images + add a [release guide](../DEVELOPER-DOCS.md#how-to-release)
+  - fix the `production/nginx/Dockerfile` by installing composer dependencies before running `npm install` (a tailwind asset generation command needs some filament css resource from the vendor folder...)
+- create a `docker-compose.yaml` based on the `compose.prod.yaml` using those published Docker images
+- write a [basic setup guide](WAFFLE-INSTALLATION-GUIDE.md#basic-setup)
