@@ -10,7 +10,7 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 class WaffleStatsOverview extends BaseWidget
 {
     protected static ?int $sort = 2;
-    protected ?string $heading = 'Stats';
+    protected ?string $heading = 'Statistics';
     protected ?string $description = 'Statistics about waffles eaten and participation this year';
     protected static bool $isLazy = false;
 

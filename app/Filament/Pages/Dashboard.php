@@ -4,6 +4,8 @@ namespace App\Filament\Pages;
 
 use App\Filament\Widgets\AccountWidget;
 use App\Filament\Widgets\QuoteWidget;
+use App\Filament\Widgets\WaffleDayParticipationsChart;
+use App\Filament\Widgets\WafflesEatenChart;
 use App\Filament\Widgets\WaffleStatsOverview;
 use Filament\Pages\Dashboard as BaseDashboard;
 
@@ -21,6 +23,9 @@ class Dashboard extends BaseDashboard
             QuoteWidget::class,
 
             WaffleStatsOverview::class,
+
+            WafflesEatenChart::class,
+            WaffleDayParticipationsChart::class,
         ];
     }
 

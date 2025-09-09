@@ -179,3 +179,22 @@ Some helpful documentation pages:
 Some helpful documentation pages:
 
 - https://filamentphp.com/docs/4.x/widgets/stats-overview
+
+> Commits:
+>
+> - `d696feea`: `feat: add the 3 stats overview widget to the dashboard`
+
+## 11. Build the dashboard - 2 chart widgets
+
+- add the two line chart widgets with a year filter
+  - `php artisan make:filament-widget WafflesEatenChart --chart` -> in a panel, line chart
+  - `php artisan make:filament-widget WaffleDayParticipationsChart --chart` -> same as above
+
+Some helpful documentation pages:
+
+- https://filamentphp.com/docs/4.x/widgets/charts
+- https://filamentphp.com/docs/4.x/widgets/charts#custom-filters
+  - https://filamentphp.com/docs/4.x/forms/select
+- https://filamentphp.com/docs/4.x/widgets/charts#setting-chart-configuration-options
+- https://www.chartjs.org/docs/latest/charts/line.html
+- https://stackoverflow.com/questions/37699485/skip-decimal-points-on-y-axis-in-chartjs
