@@ -153,11 +153,11 @@ Some helpful documentation pages:
 >
 > - `59e6205c`: `feat: add the leaderboard page`
 
-## 9. Build the dashboard - first widget
+## 9. Build the dashboard - first custom widget
 
 - add a custom dashboard page and set up a responsive 12-column widget grid
 - add the Filament built-in AccountWidget
-- add a first custom widget (`php artisan make:filament-widget QuoteWidget` -> custom, in a panel)
+- add the custom QuoteWidget (`php artisan make:filament-widget QuoteWidget` -> custom, in a panel)
   - set up Tailwind CSS (by having a custom Filament theme) to process classes in my `resources/views/filament` folder and include them in the compiled CSS
 
 Some helpful documentation pages:
@@ -170,3 +170,12 @@ Some helpful documentation pages:
 > Commits:
 >
 > - `1f883f4e`: `minor: sort sidebar menu items`
+> - `a299c841`: `feat: add the dashboard page with 1 built-in and 1 custom widget, setup: Tailwind CSS`
+
+## 10. Build the dashboard - 3 stats overview widget
+
+- add a WaffleStatsOverview widget (`php artisan make:filament-widget WaffleStatsOverview --stats-overview`) that displays "statistics about waffles eaten and participation this year"
+
+Some helpful documentation pages:
+
+- https://filamentphp.com/docs/4.x/widgets/stats-overview

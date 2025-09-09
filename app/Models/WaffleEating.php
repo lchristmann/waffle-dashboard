@@ -31,4 +31,23 @@ class WaffleEating extends Model
     {
         return $this->belongsTo(User::class, 'entered_by_user_id');
     }
+
+    // Count distinct days waffles were eaten in a given year
+    public static function waffleDaysInYear(int $year): int
+    {
+        return static::query()
+            ->whereYear('date', $year)
+            ->distinct('date')
+            ->count('date');
+    }
+
+    // Count distinct days waffles were eaten in a given month
+    public static function waffleDaysInMonth(int $year, int $month): int
+    {
+        return static::query()
+            ->whereYear('date', $year)
+            ->whereMonth('date', $month)
+            ->distinct('date')
+            ->count('date');
+    }
 }

@@ -71,6 +71,15 @@ class User extends Authenticatable implements FilamentUser
             ->sum('count');
     }
 
+    // Total waffles eaten by the user in a given month
+    public function wafflesEatenInMonth(int $year, int $month): int
+    {
+        return $this->waffleEatings()
+            ->whereYear('date', $year)
+            ->whereMonth('date', $month)
+            ->sum('count');
+    }
+
     public function isAdmin(): bool
     {
         return $this->is_admin;

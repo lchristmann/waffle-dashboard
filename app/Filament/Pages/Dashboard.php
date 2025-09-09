@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Filament\Widgets\AccountWidget;
 use App\Filament\Widgets\QuoteWidget;
+use App\Filament\Widgets\WaffleStatsOverview;
 use Filament\Pages\Dashboard as BaseDashboard;
 
 class Dashboard extends BaseDashboard
@@ -18,6 +19,8 @@ class Dashboard extends BaseDashboard
         return [
             AccountWidget::class,
             QuoteWidget::class,
+
+            WaffleStatsOverview::class,
         ];
     }
 
