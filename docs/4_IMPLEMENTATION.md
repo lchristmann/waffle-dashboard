@@ -148,3 +148,25 @@ Some helpful documentation pages:
 - https://filamentphp.com/docs/4.x/navigation/custom-pages
 - https://filamentphp.com/docs/4.x/tables/custom-data
 - https://filamentphp.com/docs/4.x/tables/columns/overview#setting-the-state-of-a-column
+
+> Commits:
+>
+> - `59e6205c`: `feat: add the leaderboard page`
+
+## 9. Build the dashboard - first widget
+
+- add a custom dashboard page and set up a responsive 12-column widget grid
+- add the Filament built-in AccountWidget
+- add a first custom widget (`php artisan make:filament-widget QuoteWidget` -> custom, in a panel)
+  - set up Tailwind CSS (by having a custom Filament theme) to process classes in my `resources/views/filament` folder and include them in the compiled CSS
+
+Some helpful documentation pages:
+
+- https://filamentphp.com/docs/4.x/widgets/overview
+- https://filamentphp.com/docs/4.x/widgets/overview#customizing-the-dashboard-page
+- https://filamentphp.com/docs/4.x/widgets/overview#responsive-widgets-grid
+- https://filamentphp.com/docs/4.x/styling/overview#using-tailwind-css-classes-in-your-blade-views-or-php-files
+
+> Commits:
+>
+> - `1f883f4e`: `minor: sort sidebar menu items`
