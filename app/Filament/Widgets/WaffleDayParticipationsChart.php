@@ -3,15 +3,13 @@
 namespace App\Filament\Widgets;
 
 use App\Models\WaffleEating;
-use Filament\Forms\Components\Select;
-use Filament\Schemas\Schema;
 use Filament\Widgets\ChartWidget;
-use Filament\Widgets\ChartWidget\Concerns\HasFiltersSchema;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Illuminate\Support\Carbon;
 
 class WaffleDayParticipationsChart extends ChartWidget
 {
-    use HasFiltersSchema;
+    use InteractsWithPageFilters;
 
     protected static ?int $sort = 4;
     protected ?string $description = 'People having eaten a waffle per month';
@@ -23,7 +21,7 @@ class WaffleDayParticipationsChart extends ChartWidget
 
     public function getHeading(): string
     {
-        $year = $this->filters['year'] ?? now()->year;
+        $year = $this->pageFilters['year'] ?? now()->year;
 
         return "Waffle Day Participations ({$year})";
     }
@@ -31,25 +29,6 @@ class WaffleDayParticipationsChart extends ChartWidget
     protected function getType(): string
     {
         return 'line';
-    }
-
-    public function filtersSchema(Schema $schema): Schema
-    {
-        // Get distinct years from waffle eating data
-        $years = WaffleEating::query()
-            ->selectRaw('DISTINCT EXTRACT(YEAR FROM date) AS year')
-            ->orderByDesc('year')
-            ->pluck('year')
-            ->map(fn ($year) => (int) $year)
-            ->toArray();
-
-        return $schema->components([
-            Select::make('year')
-                ->label('Year')
-                ->options(array_combine($years, $years))
-                ->default(now()->year)
-                ->selectablePlaceholder(false),
-        ]);
     }
 
     protected ?array $options = [
@@ -70,11 +49,8 @@ class WaffleDayParticipationsChart extends ChartWidget
 
     protected function getData(): array
     {
-        $year = $this->filters['year'] ?? now()->year;
-        $currentMonth = now()->month;
-
-        // If the selected year is in the past, show all 12 months
-        $maxMonth = $year === now()->year ? $currentMonth : 12;
+        $year = $this->pageFilters['year'] ?? now()->year;
+        $maxMonth = $year === now()->year ? now()->month : 12;
 
         $labels = [];
         $data = [];

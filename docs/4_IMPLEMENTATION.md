@@ -198,3 +198,16 @@ Some helpful documentation pages:
 - https://filamentphp.com/docs/4.x/widgets/charts#setting-chart-configuration-options
 - https://www.chartjs.org/docs/latest/charts/line.html
 - https://stackoverflow.com/questions/37699485/skip-decimal-points-on-y-axis-in-chartjs
+
+> Commits:
+>
+> - `6388e8d5`: `feat: add the 2 line chart widgets to the dashboard`
+
+## 12. Improve the dashboard - have a global year filter
+
+So far the 3 stats overview widgets are pinned to the current year, while the 2 line chart widgets are dynamic.
+Let's have one year filter for the whole dashboard (using it across all data-displaying widgets)!
+
+Some helpful documentation pages:
+
+- https://filamentphp.com/docs/4.x/widgets/overview#filtering-widget-data

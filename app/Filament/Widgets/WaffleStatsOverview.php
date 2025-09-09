@@ -6,9 +6,12 @@ use App\Models\User;
 use App\Models\WaffleEating;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 
 class WaffleStatsOverview extends BaseWidget
 {
+    use InteractsWithPageFilters;
+
     protected static ?int $sort = 2;
     protected ?string $heading = 'Statistics';
     protected ?string $description = 'Statistics about waffles eaten and participation this year';
@@ -16,8 +19,9 @@ class WaffleStatsOverview extends BaseWidget
 
     protected function getStats(): array
     {
-        $year = now()->year;
-        $currentMonth = now()->month;
+        // Get year from global filter (fallback: current year)
+        $year = $this->pageFilters['year'] ?? now()->year;
+        $maxMonth = $year === now()->year ? now()->month : 12;
 
         $users = User::all();
 
@@ -31,7 +35,7 @@ class WaffleStatsOverview extends BaseWidget
         $peopleByMonth = [];
         $daysByMonth = [];
 
-        for ($month = 1; $month <= $currentMonth; $month++) {
+        for ($month = 1; $month <= $maxMonth; $month++) {
             $wafflesByMonth[] = $users->sum(fn($user) => $user->wafflesEatenInMonth($year, $month));
             $peopleByMonth[] = $users->filter(fn($user) => $user->wafflesEatenInMonth($year, $month) > 0)->count();
             $daysByMonth[] = WaffleEating::waffleDaysInMonth($year, $month);
@@ -39,7 +43,7 @@ class WaffleStatsOverview extends BaseWidget
 
         return [
             Stat::make("Total Waffles ({$year})", $totalWafflesEaten)
-                ->description('All waffles eaten this year')
+                ->description("All waffles eaten that year")
                 ->descriptionIcon('heroicon-m-circle-stack')
                 ->color('primary')
                 ->chart($wafflesByMonth),
