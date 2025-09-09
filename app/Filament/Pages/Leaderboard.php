@@ -20,6 +20,7 @@ class Leaderboard extends Page implements HasTable
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-trophy';
     protected static ?string $title = 'Waffle Leaderboard';
     protected string $view = 'filament.pages.leaderboard';
+    protected static ?int $navigationSort = 20;
 
     public function table(Table $table): Table
     {

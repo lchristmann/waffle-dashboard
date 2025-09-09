@@ -22,6 +22,8 @@ class WaffleEatingResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCircleStack;
 
+    protected static ?int $navigationSort = 30;
+
     public static function form(Schema $schema): Schema
     {
         return WaffleEatingForm::configure($schema);
