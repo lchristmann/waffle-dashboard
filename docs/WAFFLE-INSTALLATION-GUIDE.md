@@ -9,6 +9,7 @@ This document guides you through setting up the waffle dashboard, making it wate
 - [Secure your Waffles (HTPS)](#secure-your-waffles-htps)
 - [Waffle Upgrade Guide](#waffle-upgrade-guide)
 
+
 ## Requirements
 
 - have a server
@@ -18,40 +19,9 @@ Many hosting providers give you both in one go, allowing you to select `Docker C
 
 ## Basic Setup
 
-SSH into your server.
+...
 
-1. Create a folder
-    ```shell
-    mkdir /opt/waffle-dashboard
-    `cd /opt/waffle-dashboard`
-    ```
-2. Download the `docker-compose.yml`
-    ```shell
-    curl -L https://raw.githubusercontent.com/lchristmann/waffle-dashboard/main/docker-compose.yaml -o docker-compose.yaml
-    ```
-3. Download the `.env.example` and save it as `env` file
-    ```shell
-    curl -L https://raw.githubusercontent.com/lchristmann/waffle-dashboard/main/.env.example -o .env
-    ```
-4. Edit the `.env` file: `APP_ENV=production`, `APP_DEBUG=false`, and set the `APP_URL` to your domain or public IP address
-    ```shell
-    nano .env
-    ```
-5. Create the Docker network and start the services
-    ```shell
-    docker network create waffle-dashboard-network
-    docker compose up -d
-    ```
-6. Set a newly generated `APP_KEY` in the `.env` file (format `base64:xyz...`)
-    ```shell
-    docker compose exec php-fpm bash
-    php artisan key:generate --show
-    exit
-    nano .env 
-    ```
-7. Verify your installation by visting http://_yourServersPublicIPaddress_/health.
-
-Now you can create your first admin user to use the waffle dashboard:
+Now you can create your first admin user:
 
 ````shell
 docker compose exec php-fpm bash
