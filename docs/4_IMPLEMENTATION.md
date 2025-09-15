@@ -263,3 +263,7 @@ Some helpful documentation pages:
 
 - https://www.atlantic.net/dedicated-server-hosting/how-to-deploy-laravel-with-docker-and-docker-compose/
 - https://stackoverflow.com/questions/76420466/laravel-vite-production-doesnt-use-https
+
+> Commits:
+>
+> - `a0588101`: `release+docs: add release & deployment code+instructions`
