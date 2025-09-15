@@ -38,6 +38,8 @@
 .env.example
 LICENSE
 README.md
+DEVELOPER-DOCS.md
+docs
 
 # Ignore development-related files and directories
 # For development environment, we will use mount bind to mount the source code to the container

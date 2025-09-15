@@ -22,6 +22,7 @@ The past development is documented in the [4_IMPLEMENTATION.md](docs/4_IMPLEMENT
   - [Rebuild Containers:](#rebuild-containers)
   - [Stop Containers:](#stop-containers)
   - [View Logs:](#view-logs)
+- [How to Release](#how-to-release)
 
 ## Prerequisites
 Ensure you have Docker and Docker Compose installed. You can verify by running:
@@ -163,3 +164,55 @@ For specific services, you can use:
 ```bash
 docker compose -f compose.dev.yaml logs -f web
 ```
+
+## How to Release
+
+> ⚠️ Test that whatever you've changed did not break the application: just run the below build command,
+> set that new release version in the `docker-compose.yaml` file
+> and then do `docker compose -f docker-compose.yaml up -d` here locally.
+
+```shell
+docker login
+```
+
+Set a version that you want to release:
+
+```shell
+VERSION=1.0.0
+```
+
+Then build, tag and push the docker image:
+
+```shell
+docker build \
+  -f ./docker/deployment/php-fpm/Dockerfile \
+  -t leanderchristmann/waffle-dashboard:${VERSION} \
+  -t leanderchristmann/waffle-dashboard:latest \
+  .
+```
+
+```shell
+docker push leanderchristmann/waffle-dashboard:${VERSION}
+docker push leanderchristmann/waffle-dashboard:latest
+```
+
+Set that new version in the `docker-compose.yaml`:
+
+```yaml
+  php-fpm:
+    # For the php-fpm service, we will create a custom image to install the necessary PHP extensions and setup proper permissions.
+    image: leanderchristmann/waffle-dashboard:1.0.0 # <--- here!!
+```
+
+Now commit your changed code.
+
+Also tag the Git release:
+
+```shell
+git tag -a "${VERSION}" -m "Release ${VERSION}"
+git push origin "${VERSION}"
+```
+
+Finally, [create a GitHub release](https://github.com/lchristmann/selfhosted-waffle-dashboard/releases) via the GitHub UI -
+it's takes the Git tag and lets you add some meta-information to it.
+Give a title like `1.0.0`, a heading like `## What's Changed` and put a bullet point list of changes.

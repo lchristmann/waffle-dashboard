@@ -3,6 +3,19 @@
 ## Table of Contents <!-- omit in toc -->
 
 - [1. New Laravel+Docker project](#1-new-laraveldocker-project)
+- [2. Install Filament and create Artisan command for making admin users](#2-install-filament-and-create-artisan-command-for-making-admin-users)
+- [3. Add profile page and fully implement the data model](#3-add-profile-page-and-fully-implement-the-data-model)
+- [4. Add the users CRUD page (only for admins)](#4-add-the-users-crud-page-only-for-admins)
+- [5. Enhance the users CRUD page (only for admins)](#5-enhance-the-users-crud-page-only-for-admins)
+- [6. Fix user -\> waffleEating FK relation](#6-fix-user---waffleeating-fk-relation)
+- [7. Add the waffles CRUD page](#7-add-the-waffles-crud-page)
+- [8. Add the leaderboard page](#8-add-the-leaderboard-page)
+- [9. Build the dashboard - first custom widget](#9-build-the-dashboard---first-custom-widget)
+- [10. Build the dashboard - 3 stats overview widget](#10-build-the-dashboard---3-stats-overview-widget)
+- [11. Build the dashboard - 2 chart widgets](#11-build-the-dashboard---2-chart-widgets)
+- [12. Improve the dashboard - have a global year filter](#12-improve-the-dashboard---have-a-global-year-filter)
+- [13. Finished application!! Let's have screenshots.](#13-finished-application-lets-have-screenshots)
+- [14. Release the software](#14-release-the-software)
 
 ## 1. New Laravel+Docker project
 
@@ -219,3 +232,34 @@ Some helpful documentation pages:
 ## 13. Finished application!! Let's have screenshots.
 
 For you to be able to get a quick impression of how the waffle dashboard software looks like, I'll add some images. 
+
+> Commits:
+>
+> - `1f687d08`: `docs: upload screenshots of the application`
+
+## 14. Release the software
+
+> In  a failed attempt, I tried to extend the [base project](BASE-PROJECT-README.md) (see [1. step New Laravel+Docker project](#1-new-laraveldocker-project))
+> as it was intended. However, since I added the custom widget in [9. Build the dashboard - first custom widget](#9-build-the-dashboard---first-custom-widget),
+> this was no longer easily feasible.
+> 
+> The reason is that the Tailwind CSS we set up in that step (which runs during `npm build`),
+> has dependencies on the Filament in the `vendor` folder.
+> 
+> So I'll simply do the `composer install` and `npm install && npm run build` both in one `Dockerfile` and won't need a custom Nginx Docker image anymore. 
+> 
+> Commits:
+>
+> - `8eb08396`: `release+docs: build & push Docker images, add release & setup instructions, adapt nginx image`
+> - `061956a6`: `Revert "release+docs: build & push Docker images, add release & setup instructions, adapt nginx image"`
+
+- add a `docker-compose.yaml` and further setup files in the `docker/deployment` directory
+  - test it locally (build the Docker image (see [release guide](../DEVELOPER-DOCS.md#how-to-release): just build, don't push) and run `docker compose -f docker-compose.yaml up -d`)
+- publish the `leanderchristmann/waffle-dashboard` Docker image
+- add a [release guide](../DEVELOPER-DOCS.md#how-to-release)
+- write the [waffle installation guide](WAFFLE-INSTALLATION-GUIDE.md)
+
+Some helpful documentation pages:
+
+- https://www.atlantic.net/dedicated-server-hosting/how-to-deploy-laravel-with-docker-and-docker-compose/
+- https://stackoverflow.com/questions/76420466/laravel-vite-production-doesnt-use-https
