@@ -267,3 +267,19 @@ Some helpful documentation pages:
 > Commits:
 >
 > - `a0588101`: `release+docs: add release & deployment code+instructions`
+> - `d7619cc8`: `minor+docs: add last step's commit info in implementation guide`
+
+## 15. Improve Installation Speed and Software Security through a better Build Process 
+
+Implement a [multi-stage build](https://docs.docker.com/build/building/multi-stage/) approach (like in the [base project](BASE-PROJECT-README.md)) in the `deployment/php-fpm/Dockerfile`:
+
+- a `builder` stage (with everything: build tools, dev libraries, temporary build artifacts) and
+- a slim `production` stage (just the runtime libs + PHP extensions + app code + compiled assets)
+
+Now when I build the image, all the baggage from the builder stage gets left behind, resulting in:
+
+- a smaller `leanderchristmann/waffle-dashboard` Docker image (went down from `365.01 MB` to `276.8 MB`) and thus significantly faster installation time
+- improved security, since attackers can't exploit all the previously included dev tools and libraries anymore
+
+
+

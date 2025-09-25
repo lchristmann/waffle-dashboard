@@ -1,10 +1,7 @@
-# Use the official PHP image as a base image
-FROM php:8.4-fpm
+# Stage 1: Build PHP extensions, Composer dependencies, and Node assets
+FROM php:8.4-fpm AS builder
 
-# Install system dependencies and PHP extensions required for Laravel + MySQL/PostgreSQL support
-# Some dependencies are required for PHP extensions only in the build stage
-# We don't need to install Node.js or build assets, as it was done in the Nginx image
-# libfcgi-bin and procps are required for the php-fpm-healthcheck script
+# Install system dependencies needed for PHP extensions and build tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     unzip \
@@ -15,8 +12,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libcurl4-openssl-dev \
     libicu-dev \
     libzip-dev \
-    libfcgi-bin \
-    procps \
     nodejs \
     npm \
     && docker-php-ext-install -j$(nproc) \
@@ -59,6 +54,20 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Install Node.js dependencies and build assets
 RUN npm install && npm run build
 
+
+# Stage 2: Production image
+FROM php:8.4-fpm AS production
+
+# Install only runtime libraries needed in production
+# libfcgi-bin and procps are required for the php-fpm-healthcheck script
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq-dev \
+    libicu-dev \
+    libzip-dev \
+    libfcgi-bin \
+    procps \
+    && apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 # Download and install php-fpm health check script
 RUN curl -o /usr/local/bin/php-fpm-healthcheck \
     https://raw.githubusercontent.com/renatomefi/php-fpm-healthcheck/master/php-fpm-healthcheck \
@@ -71,8 +80,10 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 # Copy the initial storage structure
 COPY ./storage /var/www/storage-init
 
-# Move public assets to a temporary folder (the entrypoint.sh script will copy them back and this will trigger the shared volume to work and the Nginx container to have the public folder contents, too)
-RUN mv /var/www/public /var/www/public-init
+# Copy PHP extensions and libraries from the builder stage
+COPY --from=builder /usr/local/lib/php/extensions/ /usr/local/lib/php/extensions/
+COPY --from=builder /usr/local/etc/php/conf.d/ /usr/local/etc/php/conf.d/
+COPY --from=builder /usr/local/bin/docker-php-ext-* /usr/local/bin/
 
 # Use the recommended production PHP configuration
 # -----------------------------------------------------------
@@ -87,6 +98,15 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 RUN sed -i '/\[www\]/a pm.status_path = /status' /usr/local/etc/php-fpm.d/zz-docker.conf
 # Update the variables_order to include E (for ENV)
 #RUN sed -i 's/variables_order = "GPCS"/variables_order = "EGPCS"/' "$PHP_INI_DIR/php.ini"
+
+# Copy built app, vendor dependencies, and compiled assets from builder
+COPY --from=builder /var/www /var/www
+
+# Move public assets to a temporary folder (the entrypoint.sh script will copy them back and this will trigger the shared volume to work and the Nginx container to have the public folder contents, too)
+RUN mv /var/www/public /var/www/public-init
+
+# Set working directory
+WORKDIR /var/www
 
 # Ensure correct permissions
 RUN chown -R www-data:www-data /var/www
