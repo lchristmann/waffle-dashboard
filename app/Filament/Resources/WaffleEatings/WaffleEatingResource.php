@@ -2,16 +2,22 @@
 
 namespace App\Filament\Resources\WaffleEatings;
 
-use App\Filament\Resources\WaffleEatings\Pages\CreateWaffleEating;
-use App\Filament\Resources\WaffleEatings\Pages\EditWaffleEating;
-use App\Filament\Resources\WaffleEatings\Pages\ListWaffleEatings;
-use App\Filament\Resources\WaffleEatings\Schemas\WaffleEatingForm;
-use App\Filament\Resources\WaffleEatings\Tables\WaffleEatingsTable;
+use App\Filament\Resources\WaffleEatings\Pages\ManageWaffleEatings;
 use App\Models\WaffleEating;
 use BackedEnum;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class WaffleEatingResource extends Resource
@@ -26,27 +32,77 @@ class WaffleEatingResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return WaffleEatingForm::configure($schema);
+        return $schema
+            ->components([
+                DatePicker::make('date')->required()->maxDate(now())->minDate(now()->subYears(100)),
+                TextInput::make('count')->required()->numeric(),
+
+                // Select user only on create
+                Select::make('user_id')->label('Who ate')
+                    ->relationship('user', 'name')
+                    ->default(fn () => auth()->id())
+                    ->visible(fn (string $context) => $context === 'create')
+                    ->required(fn (string $context) => $context === 'create'),
+            ]);
     }
 
     public static function table(Table $table): Table
     {
-        return WaffleEatingsTable::configure($table);
-    }
+        return $table
+            ->columns([
+                TextColumn::make('date')->date()->sortable(),
+                TextColumn::make('count')->sortable(),
+                TextColumn::make('user.name')->label('Who ate')->searchable(),
+                TextColumn::make('enteredBy.name')->label('Entered by')->searchable()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('created_at')->dateTime()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('updated_at')->dateTime()->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->defaultSort('date', 'desc')
+            ->filters([
+                // Default "My Records" filter (ate or entered)
+                Filter::make('ate_or_entered')
+                    ->label('My Records')
+                    ->query(fn ($query) => $query->where(function ($q) {
+                        $q->where('user_id', auth()->id())
+                            ->orWhere('entered_by_user_id', auth()->id());
+                    }))
+                    ->default(),
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
+                // Optional manual filters
+                SelectFilter::make('user')
+                    ->label('Who ate')
+                    ->relationship('user', 'name')
+                    ->searchable()
+                    ->preload(),
+                SelectFilter::make('enteredBy')
+                    ->label('Entered by')
+                    ->relationship('enteredBy', 'name')
+                    ->searchable()
+                    ->preload(),
+            ])
+            ->recordActions([
+                EditAction::make()
+                    ->mutateDataUsing(function (array $data): array {
+                        // Set the entered_by_user_id automatically
+                        $data['entered_by_user_id'] = auth()->id();
+
+                        return $data;
+                    }),
+                DeleteAction::make(),
+            ])
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                ]),
+            ])
+            ->paginated([10, 25, 50, 100, 'all'])
+            ->defaultPaginationPageOption(25);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => ListWaffleEatings::route('/'),
-            'create' => CreateWaffleEating::route('/create'),
-            'edit' => EditWaffleEating::route('/{record}/edit'),
+            'index' => ManageWaffleEatings::route('/'),
         ];
     }
 }

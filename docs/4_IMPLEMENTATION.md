@@ -289,6 +289,19 @@ Now when I build the image, all the baggage from the builder stage gets left beh
 
 ## 16. Improve the User Interface (UI) & the User Experience (UX)
 
-After using the application for some time, some UI/UX improvements are necessary:
+After using the application for some time and being inspired by features encountered in the [Filament 4 From Scratch course by Laravel Daily](https://laraveldaily.com/course/filament-4),
+some UI/UX improvements are necessary:
 
 - remove unwelcome dashboard elements AccountWidget & QuoteWidget from the Dashboard UI + do some minor text changes
+- make the WaffleEating a simple (modal) resource instead of a normal resource for a better (faster, simpler) user experience
+
+Some helpful documentation pages:
+
+- https://filamentphp.com/docs/4.x/resources/overview#simple-modal-resources
+- https://filamentphp.com/docs/4.x/actions/create#customizing-data-before-saving
+- https://filamentphp.com/docs/4.x/actions/edit#customizing-data-before-saving
+
+> Commits:
+>
+> - `7da2d1b4`: `minor: remove Account- & QuoteWidget from dashboard, text changes`
+
