@@ -2,8 +2,6 @@
 
 namespace App\Filament\Pages;
 
-use App\Filament\Widgets\AccountWidget;
-use App\Filament\Widgets\QuoteWidget;
 use App\Filament\Widgets\WaffleStatsOverview;
 use App\Filament\Widgets\WafflesEatenChart;
 use App\Filament\Widgets\WaffleDayParticipationsChart;
@@ -28,8 +26,6 @@ class Dashboard extends BaseDashboard
     public function getWidgets(): array
     {
         return [
-            AccountWidget::class,
-            QuoteWidget::class,
             WaffleStatsOverview::class,
             WafflesEatenChart::class,
             WaffleDayParticipationsChart::class,

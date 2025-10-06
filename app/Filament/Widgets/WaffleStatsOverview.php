@@ -13,8 +13,6 @@ class WaffleStatsOverview extends BaseWidget
     use InteractsWithPageFilters;
 
     protected static ?int $sort = 2;
-    protected ?string $heading = 'Statistics';
-    protected ?string $description = 'Statistics about waffles eaten and participation this year';
     protected static bool $isLazy = false;
 
     protected function getStats(): array
@@ -42,7 +40,7 @@ class WaffleStatsOverview extends BaseWidget
         }
 
         return [
-            Stat::make("Total Waffles ({$year})", $totalWafflesEaten)
+            Stat::make("Waffles Eaten ({$year})", $totalWafflesEaten)
                 ->description("All waffles eaten that year")
                 ->descriptionIcon('heroicon-m-circle-stack')
                 ->color('primary')

@@ -16,6 +16,8 @@
 - [12. Improve the dashboard - have a global year filter](#12-improve-the-dashboard---have-a-global-year-filter)
 - [13. Finished application!! Let's have screenshots.](#13-finished-application-lets-have-screenshots)
 - [14. Release the software](#14-release-the-software)
+- [15. Improve Installation Speed and Software Security through a better Build Process](#15-improve-installation-speed-and-software-security-through-a-better-build-process)
+- [16. Improve the User Interface (UI) \& the User Experience (UX)](#16-improve-the-user-interface-ui--the-user-experience-ux)
 
 ## 1. New Laravel+Docker project
 
@@ -269,7 +271,7 @@ Some helpful documentation pages:
 > - `a0588101`: `release+docs: add release & deployment code+instructions`
 > - `d7619cc8`: `minor+docs: add last step's commit info in implementation guide`
 
-## 15. Improve Installation Speed and Software Security through a better Build Process 
+## 15. Improve Installation Speed and Software Security through a better Build Process
 
 Implement a [multi-stage build](https://docs.docker.com/build/building/multi-stage/) approach (like in the [base project](BASE-PROJECT-README.md)) in the `deployment/php-fpm/Dockerfile`:
 
@@ -281,5 +283,12 @@ Now when I build the image, all the baggage from the builder stage gets left beh
 - a smaller `leanderchristmann/waffle-dashboard` Docker image (went down from `365.01 MB` to `276.8 MB`) and thus significantly faster installation time
 - improved security, since attackers can't exploit all the previously included dev tools and libraries anymore
 
+> Commits:
+>
+> - `5080131b`: `build: add multi-stage Docker build for deployment version of the software`
 
+## 16. Improve the User Interface (UI) & the User Experience (UX)
 
+After using the application for some time, some UI/UX improvements are necessary:
+
+- remove unwelcome dashboard elements AccountWidget & QuoteWidget from the Dashboard UI + do some minor text changes

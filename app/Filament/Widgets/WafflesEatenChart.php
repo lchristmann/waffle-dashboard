@@ -12,7 +12,7 @@ class WafflesEatenChart extends ChartWidget
     use InteractsWithPageFilters;
 
     protected static ?int $sort = 3;
-    protected ?string $description = 'Waffles eaten per month';
+    protected ?string $description = 'Broken down by month';
     protected static bool $isLazy = false;
 
     protected int | string | array $columnSpan = [
