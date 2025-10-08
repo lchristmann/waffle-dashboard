@@ -34,8 +34,8 @@ class WaffleEatingResource extends Resource
     {
         return $schema
             ->components([
-                DatePicker::make('date')->required()->maxDate(now())->minDate(now()->subYears(100)),
-                TextInput::make('count')->required()->numeric(),
+                DatePicker::make('date')->required()->maxDate(now())->minDate(now()->subYears(100))->default(now()),
+                TextInput::make('count')->required()->integer()->minValue(1)->maxValue(100)->default(1),
 
                 // Select user only on create
                 Select::make('user_id')->label('Who ate')

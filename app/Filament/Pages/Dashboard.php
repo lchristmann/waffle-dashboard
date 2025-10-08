@@ -2,6 +2,8 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Actions\WaffleEatingBulkCreateAction;
+use App\Filament\Actions\WaffleEatingCreateAction;
 use App\Filament\Widgets\WaffleStatsOverview;
 use App\Filament\Widgets\WafflesEatenChart;
 use App\Filament\Widgets\WaffleDayParticipationsChart;
@@ -48,6 +50,8 @@ class Dashboard extends BaseDashboard
             ->toArray();
 
         return [
+            WaffleEatingCreateAction::make(),
+            WaffleEatingBulkCreateAction::make(),
             FilterAction::make()->label('Change Year')
                 ->schema([
                     Select::make('year')

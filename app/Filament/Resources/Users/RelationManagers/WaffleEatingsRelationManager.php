@@ -22,8 +22,8 @@ class WaffleEatingsRelationManager extends RelationManager
     {
         return $schema
             ->components([
-                DatePicker::make('date')->required()->maxDate(now())->minDate(now()->subYears(100)),
-                TextInput::make('count')->required()->numeric()->minValue(1),
+                DatePicker::make('date')->required()->maxDate(now())->minDate(now()->subYears(100))->default(now()),
+                TextInput::make('count')->required()->integer()->minValue(1)->maxValue(100)->default(1),
             ]);
     }
 

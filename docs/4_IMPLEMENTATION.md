@@ -294,14 +294,19 @@ some UI/UX improvements are necessary:
 
 - remove unwelcome dashboard elements AccountWidget & QuoteWidget from the Dashboard UI + do some minor text changes
 - make the WaffleEating a simple (modal) resource instead of a normal resource for a better (faster, simpler) user experience
+- add more intelligent defaults, validation and sorting to waffle eating form inputs
+- add WaffleEating create-action to dashboard + a bulk-create-action to both the dashboard and the resource
 
 Some helpful documentation pages:
 
 - https://filamentphp.com/docs/4.x/resources/overview#simple-modal-resources
 - https://filamentphp.com/docs/4.x/actions/create#customizing-data-before-saving
 - https://filamentphp.com/docs/4.x/actions/edit#customizing-data-before-saving
+- https://filamentphp.com/docs/4.x/actions/modals#rendering-a-schema-in-a-modal
+- https://filamentphp.com/docs/4.x/forms/repeater
+- [[YouTube] Filament: Action Class Re-Used in Multiple Forms by Filament Daily](https://www.youtube.com/watch?v=74h-HiPeKP0)
 
 > Commits:
 >
 > - `7da2d1b4`: `minor: remove Account- & QuoteWidget from dashboard, text changes`
-
+> - `b2638746`: `feat: make WaffleEating a simple (modal) resource`
