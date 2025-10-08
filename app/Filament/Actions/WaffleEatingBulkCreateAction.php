@@ -36,7 +36,7 @@ class WaffleEatingBulkCreateAction extends CreateAction
 
                                 Select::make('user_id')
                                     ->label('Who ate')
-                                    ->options(User::orderBy('name')->pluck('name', 'id'))
+                                    ->options(fn () => User::orderBy('name')->pluck('name', 'id'))
                                     ->default(fn () => auth()->id())
                                     ->required(),
                             ])

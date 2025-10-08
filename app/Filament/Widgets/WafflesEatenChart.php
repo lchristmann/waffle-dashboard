@@ -2,7 +2,7 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\User;
+use App\Models\WaffleEating;
 use Filament\Widgets\ChartWidget;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Illuminate\Support\Carbon;
@@ -52,12 +52,18 @@ class WafflesEatenChart extends ChartWidget
         $year = $this->pageFilters['year'] ?? now()->year;
         $maxMonth = $year === now()->year ? now()->month : 12;
 
+        $monthlyData = WaffleEating::selectRaw('EXTRACT(MONTH FROM date) AS month, SUM(count) AS total')
+            ->whereYear('date', $year)
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('total', 'month'); // [month => total]
+
         $labels = [];
         $data = [];
 
         for ($month = 1; $month <= $maxMonth; $month++) {
             $labels[] = Carbon::create($year, $month)->format('M');
-            $data[] = User::all()->sum(fn ($user) => $user->wafflesEatenInMonth($year, $month));
+            $data[] = $monthlyData[$month] ?? 0;
         }
 
         return [

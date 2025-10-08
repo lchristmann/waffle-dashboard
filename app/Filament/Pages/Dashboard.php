@@ -41,14 +41,6 @@ class Dashboard extends BaseDashboard
 
     protected function getHeaderActions(): array
     {
-        // Fetch available years from waffle data
-        $years = WaffleEating::query()
-            ->selectRaw('DISTINCT EXTRACT(YEAR FROM date) AS year')
-            ->orderByDesc('year')
-            ->pluck('year')
-            ->map(fn ($year) => (int) $year)
-            ->toArray();
-
         return [
             WaffleEatingCreateAction::make()->keyBindings(['command+shift+c', 'ctrl+shift+c'])->tooltip('Shortcut: Ctrl+Shift+C'),
             WaffleEatingBulkCreateAction::make()->keyBindings(['command+shift+b', 'ctrl+shift+b'])->tooltip('Shortcut: Ctrl+Shift+B'),
@@ -56,7 +48,16 @@ class Dashboard extends BaseDashboard
                 ->schema([
                     Select::make('year')
                         ->label('Year')
-                        ->options(array_combine($years, $years))
+                        ->options(function () {
+                            $years = WaffleEating::query()
+                                ->selectRaw('DISTINCT EXTRACT(YEAR FROM date) AS year')
+                                ->orderByDesc('year')
+                                ->pluck('year')
+                                ->map(fn ($year) => (int) $year)
+                                ->toArray();
+
+                            return array_combine($years, $years);
+                        })
                         ->default(now()->year)
                         ->selectablePlaceholder(false)
                         ->required(),

@@ -24,22 +24,27 @@ class Leaderboard extends Page implements HasTable
 
     public function table(Table $table): Table
     {
-        // Get the oldest year with a waffle record
-        $oldestYear = WaffleEating::selectRaw('EXTRACT(YEAR FROM MIN(date)) AS year')->value('year');
-        // Generate years for the SelectFilter (current year down to oldest)
-        $years = range(now()->year, $oldestYear);
-
         return $table
-            ->records(function (?array $filters, ?string $sortColumn, ?string $sortDirection) use ($years) {
+            ->records(function (?array $filters) {
                 // Always use a valid year: selected filter or default to current year
                 $selectedYear = $filters['year']['value'] ?? now()->year;
 
-                // Map users to their waffle counts for the selected year
-                $data = User::all()->map(fn($user) => [
+                // Sum waffles per user for the year
+                $waffleCounts = WaffleEating::query()
+                    ->selectRaw('user_id, COALESCE(SUM(count), 0) as total')
+                    ->whereYear('date', $selectedYear)
+                    ->groupBy('user_id')
+                    ->pluck('total', 'user_id'); // [user_id => total]
+
+                // Get all users
+                $users = User::all();
+
+                // Combine data
+                $data = $users->map(fn($user) => [
                     'id' => $user->id,
                     'name' => $user->name,
                     'year' => $selectedYear,
-                    'waffles_this_year' => $user->wafflesEatenInYear($selectedYear),
+                    'waffles_this_year' => $waffleCounts[$user->id] ?? 0,
                 ]);
 
                 // Sort descending by waffles eaten and add rank
@@ -65,7 +70,11 @@ class Leaderboard extends Page implements HasTable
             ->filters([
                 SelectFilter::make('year')
                     ->label('Year')
-                    ->options(array_combine($years, $years))
+                    ->options(function () {
+                        $oldestYear = (int) WaffleEating::selectRaw('EXTRACT(YEAR FROM MIN(date)) AS year')->value('year');
+                        $years = range(now()->year, $oldestYear);
+                        return array_combine($years, $years);
+                    })
                     ->default(now()->year)
                     ->selectablePlaceholder(false),
             ])

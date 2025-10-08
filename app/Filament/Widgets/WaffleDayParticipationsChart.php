@@ -52,18 +52,18 @@ class WaffleDayParticipationsChart extends ChartWidget
         $year = $this->pageFilters['year'] ?? now()->year;
         $maxMonth = $year === now()->year ? now()->month : 12;
 
+        $monthlyParticipations = WaffleEating::selectRaw('EXTRACT(MONTH FROM date) AS month, COUNT(DISTINCT user_id) AS total')
+            ->whereYear('date', $year)
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('total', 'month'); // [month => total]
+
         $labels = [];
         $data = [];
 
         for ($month = 1; $month <= $maxMonth; $month++) {
             $labels[] = Carbon::create($year, $month)->format('M');
-
-            // Count distinct users who ate at least one waffle that month
-            $data[] = WaffleEating::query()
-                ->whereYear('date', $year)
-                ->whereMonth('date', $month)
-                ->distinct('user_id')
-                ->count('user_id');
+            $data[] = $monthlyParticipations[$month] ?? 0;
         }
 
         return [

@@ -313,3 +313,17 @@ Some helpful documentation pages:
 > - `7da2d1b4`: `minor: remove Account- & QuoteWidget from dashboard, text changes`
 > - `b2638746`: `feat: make WaffleEating a simple (modal) resource`
 > - `92fa1768`: `feat: add create & bulk-create actions for waffle eatings (in dashboard+resource) + improve forms`
+> - `22161628`: `feat: add bulk-create action for users + add keybinding for dashboard actions`
+
+## 17. Improve Application Performance (Dashboard, Leaderboard)
+
+I noticed that the dashboard page was loading very slow, so I chose to...
+
+- install the [barryvdh/laravel-debugbar](https://github.com/barryvdh/laravel-debugbar) and found that there's 500+ database queries executed loading the page - a major performance problem
+  - I found that the widgets had code like `User::all()` inside a `for` loop and loading a relationship there even
+    - (for 12 months and 16 users that's already 192 queries + 12 queries retrieving all users)
+- I resolved all those issues by aggregating data beforehand, finding more efficient ways and lazy loading filter options via callbacks
+
+Now there's only 10 database queries left, resulting in a nice and fast page load experience.
+
+On this occasion, I also optimized the Leaderboard page (now running one query for all users, instead of one for each!). 

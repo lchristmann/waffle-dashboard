@@ -24,19 +24,33 @@ class WaffleStatsOverview extends BaseWidget
         $users = User::all();
 
         // Total yearly stats
-        $totalWafflesEaten = $users->sum(fn($user) => $user->wafflesEatenInYear($year));
-        $peopleParticipated = $users->filter(fn($user) => $user->wafflesEatenInYear($year) > 0)->count();
+        $totalWafflesEaten = WaffleEating::whereYear('date', $year)->sum('count');
+        $peopleParticipated = WaffleEating::whereYear('date', $year)->distinct('user_id')->count('user_id');
         $waffleDays = WaffleEating::waffleDaysInYear($year);
 
         // Monthly charts
+        $monthlyAggregates = WaffleEating::selectRaw('
+                EXTRACT(MONTH FROM date) AS month,
+                SUM(count) AS total_waffles,
+                COUNT(DISTINCT user_id) AS people,
+                COUNT(DISTINCT date::date) AS days
+            ')
+            ->whereYear('date', $year)
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get()
+            ->keyBy('month');
+
         $wafflesByMonth = [];
         $peopleByMonth = [];
         $daysByMonth = [];
 
         for ($month = 1; $month <= $maxMonth; $month++) {
-            $wafflesByMonth[] = $users->sum(fn($user) => $user->wafflesEatenInMonth($year, $month));
-            $peopleByMonth[] = $users->filter(fn($user) => $user->wafflesEatenInMonth($year, $month) > 0)->count();
-            $daysByMonth[] = WaffleEating::waffleDaysInMonth($year, $month);
+            $aggregate = $monthlyAggregates[$month] ?? null;
+
+            $wafflesByMonth[] = $aggregate->total_waffles ?? 0;
+            $peopleByMonth[] = $aggregate->people ?? 0;
+            $daysByMonth[] = $aggregate->days ?? 0;
         }
 
         return [
