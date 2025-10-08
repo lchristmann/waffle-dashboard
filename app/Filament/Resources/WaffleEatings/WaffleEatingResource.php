@@ -19,6 +19,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class WaffleEatingResource extends Resource
 {
@@ -57,7 +58,11 @@ class WaffleEatingResource extends Resource
                 TextColumn::make('created_at')->dateTime()->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')->dateTime()->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->defaultSort('date', 'desc')
+            ->defaultSort(function (Builder $query): Builder {
+                return $query
+                    ->orderBy('date', 'desc')
+                    ->orderBy('id', 'desc');
+            })
             ->filters([
                 // Default "My Records" filter (ate or entered)
                 Filter::make('ate_or_entered')

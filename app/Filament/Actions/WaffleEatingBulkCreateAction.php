@@ -15,7 +15,7 @@ class WaffleEatingBulkCreateAction extends CreateAction
 {
     public static function getDefaultName(): ?string
     {
-        return 'bulkCreate';
+        return 'waffleEatingBulkCreate';
     }
 
     protected function setUp(): void

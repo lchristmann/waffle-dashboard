@@ -296,6 +296,8 @@ some UI/UX improvements are necessary:
 - make the WaffleEating a simple (modal) resource instead of a normal resource for a better (faster, simpler) user experience
 - add more intelligent defaults, validation and sorting to waffle eating form inputs
 - add WaffleEating create-action to dashboard + a bulk-create-action to both the dashboard and the resource
+  - add keybindings and therefor tooltips for both actions in the dashboard header
+- add User bulk-create-action to its resource
 
 Some helpful documentation pages:
 
@@ -310,3 +312,4 @@ Some helpful documentation pages:
 >
 > - `7da2d1b4`: `minor: remove Account- & QuoteWidget from dashboard, text changes`
 > - `b2638746`: `feat: make WaffleEating a simple (modal) resource`
+> - `92fa1768`: `feat: add create & bulk-create actions for waffle eatings (in dashboard+resource) + improve forms`

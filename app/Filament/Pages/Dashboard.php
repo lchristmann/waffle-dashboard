@@ -50,8 +50,8 @@ class Dashboard extends BaseDashboard
             ->toArray();
 
         return [
-            WaffleEatingCreateAction::make(),
-            WaffleEatingBulkCreateAction::make(),
+            WaffleEatingCreateAction::make()->keyBindings(['command+shift+c', 'ctrl+shift+c'])->tooltip('Shortcut: Ctrl+Shift+C'),
+            WaffleEatingBulkCreateAction::make()->keyBindings(['command+shift+b', 'ctrl+shift+b'])->tooltip('Shortcut: Ctrl+Shift+B'),
             FilterAction::make()->label('Change Year')
                 ->schema([
                     Select::make('year')
