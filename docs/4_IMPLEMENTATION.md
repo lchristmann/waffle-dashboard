@@ -337,3 +337,7 @@ On this occasion, I also optimized the Leaderboard page (now running one query f
 ## 18. Upload new screenshots (`v1.2.0`)
 
 - upload new screenshots of the application
+
+> Commits:
+>
+> - `bb786c22`: `docs: upload new screenshots`
