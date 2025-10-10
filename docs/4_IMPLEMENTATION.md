@@ -15,9 +15,11 @@
 - [11. Build the dashboard - 2 chart widgets](#11-build-the-dashboard---2-chart-widgets)
 - [12. Improve the dashboard - have a global year filter](#12-improve-the-dashboard---have-a-global-year-filter)
 - [13. Finished application!! Let's have screenshots.](#13-finished-application-lets-have-screenshots)
-- [14. Release the software](#14-release-the-software)
-- [15. Improve Installation Speed and Software Security through a better Build Process](#15-improve-installation-speed-and-software-security-through-a-better-build-process)
+- [14. Release the software (`v1.0.0`)](#14-release-the-software-v100)
+- [15. Improve Installation Speed and Software Security through a better Build Process (`v1.1.0`)](#15-improve-installation-speed-and-software-security-through-a-better-build-process-v110)
 - [16. Improve the User Interface (UI) \& the User Experience (UX)](#16-improve-the-user-interface-ui--the-user-experience-ux)
+- [17. Improve Application Performance (Dashboard, Leaderboard)](#17-improve-application-performance-dashboard-leaderboard)
+- [18. Upload new screenshots (`v1.2.0`)](#18-upload-new-screenshots-v120)
 
 ## 1. New Laravel+Docker project
 
@@ -239,7 +241,7 @@ For you to be able to get a quick impression of how the waffle dashboard softwar
 >
 > - `1f687d08`: `docs: upload screenshots of the application`
 
-## 14. Release the software
+## 14. Release the software (`v1.0.0`)
 
 > In  a failed attempt, I tried to extend the [base project](BASE-PROJECT-README.md) (see [1. step New Laravel+Docker project](#1-new-laraveldocker-project))
 > as it was intended. However, since I added the custom widget in [9. Build the dashboard - first custom widget](#9-build-the-dashboard---first-custom-widget),
@@ -271,7 +273,7 @@ Some helpful documentation pages:
 > - `a0588101`: `release+docs: add release & deployment code+instructions`
 > - `d7619cc8`: `minor+docs: add last step's commit info in implementation guide`
 
-## 15. Improve Installation Speed and Software Security through a better Build Process
+## 15. Improve Installation Speed and Software Security through a better Build Process (`v1.1.0`)
 
 Implement a [multi-stage build](https://docs.docker.com/build/building/multi-stage/) approach (like in the [base project](BASE-PROJECT-README.md)) in the `deployment/php-fpm/Dockerfile`:
 
@@ -327,3 +329,11 @@ I noticed that the dashboard page was loading very slow, so I chose to...
 Now there's only 10 database queries left, resulting in a nice and fast page load experience.
 
 On this occasion, I also optimized the Leaderboard page (now running one query for all users, instead of one for each!). 
+
+> Commits:
+>
+> - `5e41eca5`: `perf(dashboard,leaderboard): speed up page load times by massively reducing number of database queries`
+
+## 18. Upload new screenshots (`v1.2.0`)
+
+- upload new screenshots of the application
