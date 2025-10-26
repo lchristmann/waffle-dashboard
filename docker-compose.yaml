@@ -30,7 +30,7 @@ services:
 
   php-fpm:
     # For the php-fpm service, we will create a custom image to install the necessary PHP extensions and setup proper permissions.
-    image: leanderchristmann/waffle-dashboard:1.2.0
+    image: leanderchristmann/waffle-dashboard:1.3.0
     restart: unless-stopped
     volumes:
       # Mount persistent storage

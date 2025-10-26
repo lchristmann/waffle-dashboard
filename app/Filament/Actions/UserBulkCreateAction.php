@@ -8,6 +8,7 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Utilities\Get;
 use Illuminate\Support\Facades\Hash;
 
 class UserBulkCreateAction extends Action
@@ -30,11 +31,17 @@ class UserBulkCreateAction extends Action
                     ->schema([
                         Grid::make()
                             ->schema([
-                                TextInput::make('name')->required()->maxLength(255),
-                                TextInput::make('email')->required()->email()->maxLength(255),
+                                TextInput::make('name')->unique()->required()->maxLength(255),
+                                TextInput::make('email')->unique()->email()->maxLength(255)
+                                    ->required(fn (Get $get): bool => filled($get('password')))
+                                    ->live(onBlur: true),
 
-                                TextInput::make('password')->password()->required()
-                                    ->dehydrateStateUsing(fn ($state) => $state ? Hash::make($state) : null),
+                                TextInput::make('password')
+                                    ->password()
+                                    ->required(fn (Get $get): bool => filled($get('email')))
+                                    ->dehydrateStateUsing(fn ($state) => $state ? Hash::make($state) : null)
+                                    ->dehydrated()
+                                    ->live(onBlur: true),
 
                                 Toggle::make('is_admin')->label('Admin')->inline(false),
                             ])
@@ -46,8 +53,8 @@ class UserBulkCreateAction extends Action
                 foreach ($data['users'] as $userData) {
                     User::create([
                         'name' => $userData['name'],
-                        'email' => $userData['email'],
-                        'password' => $userData['password'],
+                        'email' => $userData['email'] ?? null,
+                        'password' => $userData['password'] ?? null,
                         'is_admin' => $userData['is_admin'] ?? false,
                     ]);
                 }

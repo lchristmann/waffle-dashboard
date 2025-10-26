@@ -9,6 +9,8 @@ The Waffle Dashboard is a lightweight, self-hostable application for tracking an
 ![screenshot of the waffle dashboard](docs/screenshots/dashboard.png)
 _Check out the [docs/screenshots](docs/screenshots) folder._
 
+> Please star the repository if you find this project useful - it helps me understand how many people rely on it when making changes.
+
 ## Table of Contents <!-- omit in toc -->
 
 - [Get the Waffle Dashboard](#get-the-waffle-dashboard)

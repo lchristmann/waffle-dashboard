@@ -16,6 +16,7 @@ The past development is documented in the [4_IMPLEMENTATION.md](docs/4_IMPLEMENT
 - [Prerequisites](#prerequisites)
 - [Commands for Everyday Development](#commands-for-everyday-development)
 - [Setting Up the Development Environment](#setting-up-the-development-environment)
+- [Seeding Production](#seeding-production)
 - [Usage](#usage)
   - [Accessing the Workspace Container](#accessing-the-workspace-container)
   - [Run Artisan Commands:](#run-artisan-commands)
@@ -122,6 +123,90 @@ npm run dev
 6. Access the Application:
 
 Open your browser and navigate to [http://localhost](http://localhost).
+
+## Seeding Production
+
+Seeding production isn't as easy as running `docker compose exec php-fpm php artisan db:seed --force` on the server [as in the Laravel docs](https://laravel.com/docs/12.x/seeding#forcing-seeding-production).
+
+That's because neither `fakerphp/faker` (the dev dependency most crucial to seeding) nor `composer` itself is included in the `production` Docker image (see the [docker/deployment/php-fpm/Dockerfile](docker/deployment/php-fpm/Dockerfile) -> only the production dependencies get copied from a previous builder stage to the production stage).
+
+Thus, The easiest way to seed production like development here, is exporting the data from the development Postgres database, getting the exported data to the server and importing it there.
+
+> **Warning:** Do this production seeding just for demonstration purposes and delete all that data before serious usage.<br>
+> The seeded admin user's credentials are publicly visible in this project's [DatabaseSeeder.php](database/seeders/DatabaseSeeder.php) and all other users have the password `password`.
+
+1. Run the waffle-dashboard as described in the [Commands for Everyday Development](#commands-for-everyday-development) section.
+2. Export the data from the two main database tables
+```shell
+docker compose -f compose.dev.yaml exec postgres bash
+\copy users TO '/tmp/users.csv' CSV HEADER;
+\copy waffle_eatings TO '/tmp/waffle_eatings.csv' CSV HEADER;
+exit
+exit
+```
+3. Copy the CSV files from the Postgres container to your local host machine
+```shell
+docker cp waffle-dashboard-postgres-1:/tmp/users.csv ./users.csv
+docker cp waffle-dashboard-postgres-1:/tmp/waffle_eatings.csv ./waffle_eatings.csv
+```
+4. Transfer it from your local host machine to the server
+```shell
+scp users.csv waffle_eatings.csv root@lchristmann-1:/opt/waffle-dashboard
+```
+> Given I have below SSH config in my `~/.ssh/config` file
+> 
+> ```
+> Host lchristmann-1
+> HostName yourServersIPAddressHere
+> User root
+> IdentityFile ~/.ssh/lchristmann-1
+> ```
+5. SSH into the server and `cd` into the waffle-dashboard's directory
+```shell
+ssh lchristmann-1
+cd /opt/waffle-dashboard
+```
+6. Copy the CSV files from the server to the Postgres container
+```shell
+docker cp users.csv waffle-dashboard-postgres-1:/tmp/users.csv
+docker cp waffle_eatings.csv waffle-dashboard-postgres-1:/tmp/waffle_eatings.csv
+```
+7. Backup the data from the users table
+```shell
+docker compose exec -T postgres psql -U laravel -d app -c "\
+COPY (SELECT name, email, email_verified_at, password, is_admin, remember_token, created_at, updated_at FROM users) \
+TO STDOUT WITH CSV HEADER" > users_data.csv
+```
+8. Delete all data from the `users` and `waffle_eatings` tables (else we'd run into conflicts trying to insert records with already existing `id` values)
+```shell
+docker compose exec postgres psql -d app -U laravel
+TRUNCATE TABLE waffle_eatings, users RESTART IDENTITY;
+```
+9. Import the seeding data to the server's Postgres database
+```postgresql
+\copy users FROM '/tmp/users.csv' DELIMITER ',' CSV HEADER;
+\copy waffle_eatings FROM '/tmp/waffle_eatings.csv' DELIMITER ',' CSV HEADER;
+SELECT setval(pg_get_serial_sequence('users','id'), (SELECT MAX(id) FROM users));
+SELECT setval(pg_get_serial_sequence('waffle_eatings','id'), (SELECT MAX(id) FROM waffle_eatings));
+```
+```shell
+exit
+```
+10. Restore the previously present users data
+```shell
+docker compose exec -T postgres psql -U laravel -d app -c "\
+COPY users(name, email, email_verified_at, password, is_admin, remember_token, created_at, updated_at) \
+FROM STDIN WITH CSV HEADER" < users_data.csv
+```
+
+Done - now you can log in for example with the admin user: `admin@admin.com` and `admin` or any other user with their email and password `password`.
+
+To clean up the temporary files, run below commands:
+
+```shell
+rm users.csv waffle_eatings.csv # in this project
+rm /opt/waffle-dashboard/users_data.csv /opt/waffle-dashboard/waffle_eatings.csv # on the server
+```
 
 ## Usage
 

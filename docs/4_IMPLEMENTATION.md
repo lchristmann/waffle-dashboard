@@ -341,3 +341,18 @@ On this occasion, I also optimized the Leaderboard page (now running one query f
 > Commits:
 >
 > - `bb786c22`: `docs: upload new screenshots`
+> - `4897c2db`: `release: v1.2.0`
+
+## 19. Further Improve the User Experience (UX) (`v1.3.0`)
+
+In practice, there'll be users, who don't manage their own waffle eatings entries, but let others enter them.<br>
+Hence the users bulk create would be too cumbersome, if it didn't allow creation just by name.
+
+Therefor we need the name to be unique. Email and password can be set (together, forming a pair of credentials), but don't have to.
+
+Extra: for showcasing purposes I added instructions on how to transfer seeding data into a production environment.
+
+Some helpful documentation pages:
+
+- https://filamentphp.com/docs/4.x/forms/overview#conditionally-making-a-field-required
+- https://stackoverflow.com/questions/8289100/create-unique-constraint-with-null-columns
