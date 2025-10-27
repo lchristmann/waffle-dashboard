@@ -20,6 +20,8 @@
 - [16. Improve the User Interface (UI) \& the User Experience (UX)](#16-improve-the-user-interface-ui--the-user-experience-ux)
 - [17. Improve Application Performance (Dashboard, Leaderboard)](#17-improve-application-performance-dashboard-leaderboard)
 - [18. Upload new screenshots (`v1.2.0`)](#18-upload-new-screenshots-v120)
+- [19. Further Improve the User Experience (UX) (`v1.3.0`)](#19-further-improve-the-user-experience-ux-v130)
+- [20. Custom Waffle Dashboard: Release your own one!](#20-custom-waffle-dashboard-release-your-own-one)
 
 ## 1. New Laravel+Docker project
 
@@ -356,3 +358,19 @@ Some helpful documentation pages:
 
 - https://filamentphp.com/docs/4.x/forms/overview#conditionally-making-a-field-required
 - https://stackoverflow.com/questions/8289100/create-unique-constraint-with-null-columns
+
+> Commits:
+>
+> - `3789378c`: `feat: make name unique & email optional for users who don't want to log in + release: v1.3.0`
+
+## 20. Custom Waffle Dashboard: Release your own one!
+
+Some waffle dashboard operators will want to customize the software, e.g. tailor the color scheme to their company's color scheme or to their own preferences.
+
+Therefor, I added guide that shows how to release and use one's own customized (private) version of the waffle-dashboard.
+
+Some helpful documentation pages:
+
+- https://filamentphp.com/docs/4.x/styling/overview
+- https://stackoverflow.com/questions/10065526/github-how-to-make-a-fork-of-public-repository-private
+- https://stackoverflow.com/questions/37685581/how-to-get-docker-compose-to-use-the-latest-image-from-repository

@@ -96,6 +96,7 @@ docker compose -f compose.dev.yaml up -d
 ```bash
 docker compose -f compose.dev.yaml exec workspace bash
 composer install
+npm install
 ```
 
 4. Run Migrations:
@@ -122,7 +123,7 @@ npm run dev
 
 6. Access the Application:
 
-Open your browser and navigate to [http://localhost](http://localhost).
+Open your browser and navigate to [http://localhost](http://localhost). You can create a first admin user [as described here](docs/WAFFLE-INSTALLATION-GUIDE.md#basic-setup) > step 7.
 
 ## Seeding Production
 

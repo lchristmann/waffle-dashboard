@@ -1,6 +1,6 @@
 # Waffle Dashboard <!-- omit in toc -->
 
- "Give a man a waffle and he’ll eat for a day. Teach a man to waffle and he’ll never be sad again."
+"Give a man a waffle and he’ll eat for a day. Teach a man to waffle and he’ll never be sad again."
 
 > This project is dedicated to all the amazing companies made up of wonderful people who know how to really waffle it with their employees. Shine bright, one waffle at a time. The world needs more of you.
 
@@ -25,6 +25,8 @@ _Check out the [docs/screenshots](docs/screenshots) folder._
 ## Get the Waffle Dashboard
 
 The self-hosted setup is very quick and easy - just follow the **[Waffle Installation Guide](docs/WAFFLE-INSTALLATION-GUIDE.md)**.
+
+If you want to customize the software's style, also consider the **[Custom Waffle Dashboard Guide](docs/CUSTOM-WAFFLE-DASHBOARD-GUIDE.md)**.
 
 ## Software Development Process
 
