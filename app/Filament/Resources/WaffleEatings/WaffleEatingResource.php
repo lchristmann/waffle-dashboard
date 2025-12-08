@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\WaffleEatings;
 
 use App\Filament\Resources\WaffleEatings\Pages\ManageWaffleEatings;
+use App\Models\WaffleDay;
 use App\Models\WaffleEating;
 use BackedEnum;
 use Filament\Actions\BulkActionGroup;
@@ -35,7 +36,11 @@ class WaffleEatingResource extends Resource
     {
         return $schema
             ->components([
-                DatePicker::make('date')->required()->maxDate(now())->minDate(now()->subYears(100))->default(now()),
+                DatePicker::make('date')->required()->native(false)
+                    ->maxDate(now())->minDate(now()->subYears(100))
+                    ->default(function () {
+                        return WaffleDay::mostRecent()?->date ?? now();
+                    }),
                 TextInput::make('count')->required()->integer()->minValue(1)->maxValue(100)->default(1),
 
                 // Select user only on create

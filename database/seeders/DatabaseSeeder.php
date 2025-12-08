@@ -4,7 +4,10 @@ namespace Database\Seeders;
 
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\WaffleDay;
 use App\Models\WaffleEating;
+use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -54,6 +57,18 @@ class DatabaseSeeder extends Seeder
                     'entered_by_user_id' => $allUsers->random()->id, // who entered
                 ];
             })
+            ->create();
+
+        // Create 5 waffle days (every 2nd Thursday, with one in the past)
+        $nextThursday = Carbon::now()->next(CarbonInterface::THURSDAY);
+        $dates = collect(range(-1, 3))->map(fn($i) => $nextThursday->copy()->addDays($i * 14));
+        WaffleDay::factory()
+            ->count(5)
+            ->sequence(
+                ...$dates->map(fn ($date) => [
+                    'date' => $date,
+                ])
+            )
             ->create();
     }
 }

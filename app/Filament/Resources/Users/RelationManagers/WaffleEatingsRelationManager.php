@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Users\RelationManagers;
 
+use App\Models\WaffleDay;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
@@ -22,7 +23,11 @@ class WaffleEatingsRelationManager extends RelationManager
     {
         return $schema
             ->components([
-                DatePicker::make('date')->required()->maxDate(now())->minDate(now()->subYears(100))->default(now()),
+                DatePicker::make('date')->required()->native(false)
+                    ->maxDate(now())->minDate(now()->subYears(100))
+                    ->default(function () {
+                        return WaffleDay::mostRecent()?->date ?? now();
+                    }),
                 TextInput::make('count')->required()->integer()->minValue(1)->maxValue(100)->default(1),
             ]);
     }

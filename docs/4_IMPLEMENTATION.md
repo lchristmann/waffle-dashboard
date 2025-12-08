@@ -22,6 +22,7 @@
 - [18. Upload new screenshots (`v1.2.0`)](#18-upload-new-screenshots-v120)
 - [19. Further Improve the User Experience (UX) (`v1.3.0`)](#19-further-improve-the-user-experience-ux-v130)
 - [20. Custom Waffle Dashboard: Release your own one!](#20-custom-waffle-dashboard-release-your-own-one)
+- [21. Add Waffle Day Events](#21-add-waffle-day-events)
 
 ## 1. New Laravel+Docker project
 
@@ -374,3 +375,28 @@ Some helpful documentation pages:
 - https://filamentphp.com/docs/4.x/styling/overview
 - https://stackoverflow.com/questions/10065526/github-how-to-make-a-fork-of-public-repository-private
 - https://stackoverflow.com/questions/37685581/how-to-get-docker-compose-to-use-the-latest-image-from-repository
+
+> Commits:
+>
+> - `ef8068aa`: `docs(release): how to release and use a customized (private) version of the software`
+
+## 21. Add Waffle Day Events
+
+GitHub Issue: https://github.com/lchristmann/waffle-dashboard/issues/4
+
+- add the backend functionality to manage Waffle Day Events + the frontend announcement banner
+- restrict the WaffleDay resource's management to Waffle Dashboard admins
+- improve the WaffleEating DatePicker components by setting today's (or the most recent) Waffle Day as the primary default
+
+```shell
+php artisan make:model WaffleDay -mf
+php artisan make:filament-resource WaffleDay --simple --generate
+php artisan make:policy WaffleDayPolicy --model=WaffleDay
+```
+
+Some helpful documentation pages:
+
+- https://filamentphp.com/docs/4.x/advanced/render-hooks
+- https://filamentphp.com/docs/4.x/forms/date-time-picker
+- https://tailwindcss.com/plus/ui-blocks/marketing/elements/banners
+- https://alpinejs.dev/directives/show

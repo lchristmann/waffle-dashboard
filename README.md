@@ -34,6 +34,9 @@ For this project, I opted for a variant of the classic waterfall model, which ca
 
 The Markdown documents for the [Requirements Definition](#requirements-definition) and [Architecture](#architecture) phases are based on the [version 1.1.1 of the ADF documentation template](https://github.com/architecture-decomposition-framework/adf-documentation-template/blob/main/template/architecture-documentation-en.md), which belongs to the [Architecture Decomposition Framework (ADF)](https://www.iese.fraunhofer.de/blog/softwarearchitekturen-einfacher-designen-und-verstaendlicher-dokumentieren-mit-dem-fraunhofer-adf/) developed by [Fraunhofer IESE](https://www.iese.fraunhofer.de/en/aboutus.html#:~:text=The%20Fraunhofer%20Institute%20for%20Experimental,engineering%20for%20almost%2030%20years.).
 
+> Starting on Oct 31 2025 (from [IMPLEMENTATION.md step 21](docs/4_IMPLEMENTATION.md#21-add-waffle-day-events) onward), additional application features were managed via [GitHub Issues](https://github.com/lchristmann/waffle-dashboard/issues).
+> Their additions therefore do not appear in the documents below.
+
 ### Requirements Definition
 
 See [docs/1_REQUIREMENTS.md](docs/1_REQUIREMENTS.md).
