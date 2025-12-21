@@ -14,9 +14,7 @@ class WaffleEatingPolicy
 
     public function view(User $user, WaffleEating $waffleEating): bool
     {
-        return $user->isAdmin() ||
-            $waffleEating->user_id === $user->id ||
-            $waffleEating->entered_by_user_id === $user->id;
+        return true;
     }
 
     public function create(User $user): bool

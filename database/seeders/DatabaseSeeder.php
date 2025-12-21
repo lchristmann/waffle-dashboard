@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\RemoteWaffleEating;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\WaffleDay;
@@ -9,6 +10,7 @@ use App\Models\WaffleEating;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
 
 class DatabaseSeeder extends Seeder
 {
@@ -69,6 +71,19 @@ class DatabaseSeeder extends Seeder
                     'date' => $date,
                 ])
             )
+            ->create();
+
+        // Create 10 random remote waffle eating records
+        Storage::deleteDirectory('remote-waffles'); // clear old remote waffle eating images
+        $admins = User::where('is_admin', true)->get();
+        RemoteWaffleEating::factory()
+            ->count(10)
+            ->state(function () use ($allUsers, $admins) {
+                return [
+                    'user_id' => $allUsers->random()->id,
+                    'approved_by' => rand(0, 1) ? $admins->random()->id : null,
+                ];
+            })
             ->create();
     }
 }

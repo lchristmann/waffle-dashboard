@@ -1,36 +1,39 @@
 <?php
 
-namespace App\Filament\Resources\WaffleEatings;
+namespace App\Filament\Resources\RemoteWaffleEatings;
 
-use App\Filament\Resources\WaffleEatings\Pages\ManageWaffleEatings;
+use App\Filament\Resources\RemoteWaffleEatings\Pages\ManageRemoteWaffleEatings;
+use App\Models\RemoteWaffleEating;
 use App\Models\WaffleDay;
-use App\Models\WaffleEating;
 use BackedEnum;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Select;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
-class WaffleEatingResource extends Resource
+class RemoteWaffleEatingResource extends Resource
 {
-    protected static ?string $model = WaffleEating::class;
+    protected static ?string $model = RemoteWaffleEating::class;
 
-    protected static ?string $navigationLabel = 'Waffles';
+    protected static ?string $navigationLabel = 'Waffles (Remote)';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCircleStack;
 
-    protected static ?int $navigationSort = 30;
+    protected static ?int $navigationSort = 40;
 
     public static function form(Schema $schema): Schema
     {
@@ -43,12 +46,11 @@ class WaffleEatingResource extends Resource
                     }),
                 TextInput::make('count')->required()->integer()->minValue(1)->maxValue(100)->default(1),
 
-                // Select user only on create
-                Select::make('user_id')->label('Who ate')
-                    ->relationship('user', 'name')
-                    ->default(fn () => auth()->id())
-                    ->visible(fn (string $context) => $context === 'create')
-                    ->required(fn (string $context) => $context === 'create'),
+                FileUpload::make('image')
+                    ->label('Proof Photo')
+                    ->image()
+                    ->directory('remote-waffles')
+                    ->required(),
             ]);
     }
 
@@ -58,8 +60,10 @@ class WaffleEatingResource extends Resource
             ->columns([
                 TextColumn::make('date')->date()->sortable(),
                 TextColumn::make('count')->sortable(),
-                TextColumn::make('user.name')->label('Who ate')->searchable(),
-                TextColumn::make('enteredBy.name')->label('Entered by')->searchable()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('user.name')->label('User')->searchable(),
+                ImageColumn::make('image')->disk('local'),
+                IconColumn::make('approved_by')->label('Approved')->boolean(),
+                TextColumn::make('approvedBy.name')->label('Approved By')->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')->dateTime()->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')->dateTime()->toggleable(isToggledHiddenByDefault: true),
             ])
@@ -69,13 +73,10 @@ class WaffleEatingResource extends Resource
                     ->orderBy('id', 'desc');
             })
             ->filters([
-                // Optional "My Records" filter (ate or entered)
-                Filter::make('ate_or_entered')
+                // Optional "My Records" filter
+                Filter::make('ate')
                     ->label('My Records')
-                    ->query(fn ($query) => $query->where(function ($q) {
-                        $q->where('user_id', auth()->id())
-                            ->orWhere('entered_by_user_id', auth()->id());
-                    }))
+                    ->query(fn (Builder $query) => $query->where('user_id', auth()->id()))
                     ->toggle(),
 
                 // Optional manual filters
@@ -84,21 +85,31 @@ class WaffleEatingResource extends Resource
                     ->relationship('user', 'name')
                     ->searchable()
                     ->preload(),
-                SelectFilter::make('enteredBy')
-                    ->label('Entered by')
-                    ->relationship('enteredBy', 'name')
+                SelectFilter::make('approvedBy')
+                    ->label('Approved By')
+                    ->relationship('approvedBy', 'name', function (Builder $query) {
+                        $query->where('is_admin', true);
+                    })
                     ->searchable()
                     ->preload(),
             ])
             ->recordActions([
-                EditAction::make()
-                    ->mutateDataUsing(function (array $data): array {
-                        // Set the entered_by_user_id automatically
-                        $data['entered_by_user_id'] = auth()->id();
-
-                        return $data;
-                    }),
+                EditAction::make(),
                 DeleteAction::make(),
+
+                // Admin-only Approve Action
+                Action::make('approve')
+                    ->label('Approve')
+                    ->icon('heroicon-o-check-badge')
+                    ->color('success')
+                    ->visible(fn (RemoteWaffleEating $record) =>
+                        auth()->user()->isAdmin() && !$record->isApproved()
+                    )
+                    ->action(fn (RemoteWaffleEating $record) =>
+                        $record->update(['approved_by' => auth()->id()])
+                    )
+                    ->requiresConfirmation()
+                    ->modalDescription('Have you reviewed the photo evidence?'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -110,7 +121,7 @@ class WaffleEatingResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ManageWaffleEatings::route('/'),
+            'index' => ManageRemoteWaffleEatings::route('/'),
         ];
     }
 }

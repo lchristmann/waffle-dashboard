@@ -23,6 +23,7 @@
 - [19. Further Improve the User Experience (UX) (`v1.3.0`)](#19-further-improve-the-user-experience-ux-v130)
 - [20. Custom Waffle Dashboard: Release your own one!](#20-custom-waffle-dashboard-release-your-own-one)
 - [21. Add Waffle Day Events](#21-add-waffle-day-events)
+- [22. Add Remote Waffles](#22-add-remote-waffles)
 
 ## 1. New Laravel+Docker project
 
@@ -400,3 +401,29 @@ Some helpful documentation pages:
 - https://filamentphp.com/docs/4.x/forms/date-time-picker
 - https://tailwindcss.com/plus/ui-blocks/marketing/elements/banners
 - https://alpinejs.dev/directives/show
+
+> Commits:
+>
+> - `56260ec2`: `feat: add waffle day events`
+
+## 22. Add Remote Waffles
+
+GitHub Issue: https://github.com/lchristmann/waffle-dashboard/issues/2
+
+- add everything for remote waffles: a model, migration, factory, seeding, a policy and a simple Filament resource
+
+```shell
+php artisan make:model RemoteWaffleEating -mf
+php artisan make:policy RemoteWaffleEatingPolicy --model=RemoteWaffleEating
+php artisan make:filament-resource RemoteWaffleEating --simple --generate
+```
+
+- small UI/UX improvement with the toggle instead of checkbox for the "MyRecords" filter on the two waffle eatings CRUD pages
+
+Some helpful documentation pages:
+
+- https://filamentphp.com/docs/4.x/forms/file-upload
+  - https://filamentphp.com/docs/4.x/forms/file-upload#file-type-validation
+- https://filamentphp.com/docs/4.x/tables/columns/image
+- https://laravel.com/docs/12.x/filesystem
+- [free for use images] https://pixabay.com/images/search/waffle/
