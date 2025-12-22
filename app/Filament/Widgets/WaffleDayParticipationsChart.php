@@ -2,10 +2,12 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\RemoteWaffleEating;
 use App\Models\WaffleEating;
 use Filament\Widgets\ChartWidget;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class WaffleDayParticipationsChart extends ChartWidget
 {
@@ -52,18 +54,50 @@ class WaffleDayParticipationsChart extends ChartWidget
         $year = $this->pageFilters['year'] ?? now()->year;
         $maxMonth = $year === now()->year ? now()->month : 12;
 
-        $monthlyParticipations = WaffleEating::selectRaw('EXTRACT(MONTH FROM date) AS month, COUNT(DISTINCT user_id) AS total')
+        /* -----------------------------------------
+         | Office participations per month
+         |------------------------------------------ */
+        $officeMonthly = WaffleEating::selectRaw('
+                EXTRACT(MONTH FROM date) AS month,
+                JSON_AGG(DISTINCT user_id) AS people
+            ')
             ->whereYear('date', $year)
             ->groupBy('month')
-            ->orderBy('month')
-            ->pluck('total', 'month'); // [month => total]
+            ->get()
+            ->keyBy('month');
+
+        /* -----------------------------------------
+         | Remote participations per month (approved)
+         |------------------------------------------ */
+        $remoteMonthly = RemoteWaffleEating::selectRaw('
+                EXTRACT(MONTH FROM date) AS month,
+                JSON_AGG(DISTINCT user_id) AS people
+            ')
+            ->whereYear('date', $year)
+            ->whereNotNull('approved_by')
+            ->groupBy('month')
+            ->get()
+            ->keyBy('month');
+
+        /* -----------------------------------------
+         | Build chart data
+         |------------------------------------------ */
+        $decode = fn ($value) => is_string($value) ? json_decode($value, true) : ($value ?? []);
 
         $labels = [];
         $data = [];
 
         for ($month = 1; $month <= $maxMonth; $month++) {
             $labels[] = Carbon::create($year, $month)->format('M');
-            $data[] = $monthlyParticipations[$month] ?? 0;
+
+            $officePeople = $decode($officeMonthly[$month]->people ?? []);
+            $remotePeople = $decode($remoteMonthly[$month]->people ?? []);
+
+            $uniquePeopleCount = collect($officePeople)->merge($remotePeople)->unique()->count();
+
+            $data[] = $uniquePeopleCount;
+
+            // Insert debug snippet Q2ST here
         }
 
         return [

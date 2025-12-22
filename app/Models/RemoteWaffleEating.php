@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 
 class RemoteWaffleEating extends Model
@@ -37,6 +38,32 @@ class RemoteWaffleEating extends Model
     public function isApproved(): bool
     {
         return ! is_null($this->approved_by);
+    }
+
+    public static function yearTotal(int $year): int
+    {
+        return static::query()
+            ->whereNotNull('approved_by')
+            ->whereYear('date', $year)
+            ->sum('count');
+    }
+
+    public static function participatorsInYear(int $year): Collection
+    {
+        return static::query()
+            ->whereNotNull('approved_by')
+            ->whereYear('date', $year)
+            ->distinct('user_id')
+            ->pluck('user_id');
+    }
+
+    public static function waffleDaysInYear(int $year): Collection
+    {
+        return static::query()
+            ->whereNotNull('approved_by')
+            ->whereYear('date', $year)
+            ->distinct('date')
+            ->pluck('date');
     }
 
     protected static function booted(): void

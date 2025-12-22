@@ -88,7 +88,7 @@ Requirement: **you must have a sub(domain)** for HTTPS, since [Let's Encrypt](ht
 | Source          | Protocol | Port | Purpose |
 |-----------------|----------|------|---------|
 | Any IPv4 / IPv6 | TCP      | 22   | SSH     |
-| Any IPv4 / IPv6 | ICMP     | —    | Ping    |
+| Any IPv4 / IPv6 | ICMP     | -    | Ping    |
 | Any IPv4 / IPv6 | TCP      | 80   | HTTP    |
 | Any IPv4 / IPv6 | TCP      | 443  | HTTPS   |
 

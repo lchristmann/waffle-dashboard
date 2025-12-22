@@ -23,6 +23,10 @@ The past development is documented in the [4_IMPLEMENTATION.md](docs/4_IMPLEMENT
   - [Rebuild Containers:](#rebuild-containers)
   - [Stop Containers:](#stop-containers)
   - [View Logs:](#view-logs)
+- [Manual Testing](#manual-testing)
+  - [Dashboard](#dashboard)
+  - [Leaderboard](#leaderboard)
+- [Testing](#testing)
 - [How to Release](#how-to-release)
 
 ## Prerequisites
@@ -249,6 +253,144 @@ For specific services, you can use:
 
 ```bash
 docker compose -f compose.dev.yaml logs -f web
+```
+
+## Manual Testing
+
+Open a shell with the database:
+
+```shell
+docker compose -f compose.dev.yaml exec postgres bash
+psql -d app -U laravel
+```
+
+Then validate the metrics shown on the dashboard by comparing results from the queries below against them.
+
+Set the year to run queries against:
+
+```postgresql
+\set year 2025
+```
+
+### Dashboard
+
+Check the stats:
+
+```postgresql
+-- Waffles Eaten (2025)
+SELECT COALESCE((SELECT SUM(count) FROM waffle_eatings WHERE date_part('year', date) = :year), 0)
+    + COALESCE((SELECT SUM(count) FROM remote_waffle_eatings WHERE date_part('year', date) = :year AND approved_by IS NOT NULL), 0) AS sum;
+--  Office Waffles (2025)
+SELECT COALESCE(SUM(count), 0) FROM waffle_eatings WHERE date_part('year', date) = :year;
+-- Remote Waffles Eaten (2025)
+SELECT COALESCE(SUM(count), 0) FROM remote_waffle_eatings WHERE date_part('year', date) = :year AND approved_by IS NOT NULL;
+-- People Participated (2025)
+SELECT COUNT(DISTINCT user_id)
+FROM (
+    SELECT user_id FROM waffle_eatings WHERE date_part('year', date) = :year
+    UNION ALL
+    SELECT user_id FROM remote_waffle_eatings WHERE date_part('year', date) = :year AND approved_by IS NOT NULL
+    ) AS all_participants;
+-- Waffle Days (2025)
+SELECT COUNT(DISTINCT date)
+FROM (
+     SELECT date FROM waffle_eatings WHERE EXTRACT(YEAR FROM date) = :year
+     UNION ALL
+     SELECT date FROM remote_waffle_eatings WHERE EXTRACT(YEAR FROM date) = :year AND approved_by IS NOT NULL
+) AS all_dates;
+```
+
+Check the charts below the stats (not the big widgets, but the helper chart at the bottom of the stat boxes):
+
+```php
+// Search the project for "Insert debug snippet BN7C here" and insert this
+Log::debug("Waffle Stats month {$month}", [
+    'office' => $officeWaffles,
+    'remote' => $remoteWaffles,
+    'total' => $officeWaffles + $remoteWaffles,
+    'people' => $mergedPeople,
+    'days'   => $mergedDays,
+]);
+```
+
+Reload the dashboard page and you can roughly validate the rows printed in the `storage/log/laravel.log` like so:
+
+> You can straight check the logged `office` and `remote` values against the below queries, but the logged `people` and `days` values
+> are from both of those combined (but deduplicated, so you can't just add up).  Just know this and verify that they make general sense.
+
+```postgresql
+-- Office waffles by month
+SELECT EXTRACT(MONTH FROM date) AS month, SUM(count) AS total_waffles, COUNT(DISTINCT user_id) AS people, COUNT(DISTINCT date) AS days
+FROM waffle_eatings
+WHERE date_part('year', date) = :year
+GROUP BY month
+ORDER BY month;
+-- Remote waffles by month (approved only)
+SELECT EXTRACT(MONTH FROM date) AS month, SUM(count) AS total_waffles, COUNT(DISTINCT user_id) AS people, COUNT(DISTINCT date) AS days
+FROM remote_waffle_eatings
+WHERE date_part('year', date) = :year AND approved_by IS NOT NULL
+GROUP BY month
+ORDER BY month;
+```
+
+Check the chart widgets:
+
+WafflesEatenChart:
+
+```php
+// Search the project for "Insert debug snippet MVR5 here" and insert this
+Log::debug("Waffles Eaten chart month {$month}", [
+    'office' => $office,
+    'remote' => $remote,
+    'total' => $office + $remote,
+]);
+```
+
+The data returned here should equal that logged with the above php snippet BN7C.
+
+WaffleDayParticipationsChart:
+
+```php
+// Search the project for "Insert debug snippet Q2ST here" and insert this
+Log::debug("Waffle Day Participations chart month {$month}", [
+    'office' => count($officePeople),
+    'remote' => count($remotePeople),
+    'total' => $uniquePeopleCount,
+]);
+```
+
+You can compare the results to the two SQL queries above (`-- Office waffles by month` and `-- Remote waffles by month`):
+
+- the `people` column from above `--office` query should equal the logs of the `office` value
+- the `people` column from above `--remote` query should equal the logs of the `remote` value
+
+### Leaderboard
+
+Set the year to run queries against:
+
+```postgresql
+\set year 2025
+```
+
+Validate that the people in the leaderboard do have the amount of waffles as the data suggests:
+
+```postgresql
+-- Waffle Eatings (Office + Remote)
+SELECT COALESCE((SELECT SUM(count) FROM waffle_eatings WHERE user_id = (SELECT id FROM users WHERE name = 'Mrs. Angelina Luettgen II') AND date_part('year', date) = :year), 0)
+           + COALESCE((SELECT SUM(count) FROM remote_waffle_eatings WHERE user_id = (SELECT id FROM users WHERE name = 'Mrs. Angelina Luettgen II') AND date_part('year', date) = :year AND approved_by IS NOT NULL), 0) AS sum;
+-- Waffle Eatings (Office) for a user in the given year
+SELECT COALESCE(SUM(count), 0) FROM waffle_eatings WHERE user_id = (SELECT id FROM users WHERE name = 'Dr. Wayne Ondricka IV') AND date_part('year', date) = :year;
+-- Waffle Eatings (Remote) for a user in the given year
+SELECT COALESCE(SUM(count), 0) FROM remote_waffle_eatings WHERE user_id = (SELECT id FROM users WHERE name = 'Mrs. Angelina Luettgen II') AND date_part('year', date) = :year AND approved_by IS NOT NULL;
+```
+
+## Testing
+
+Execute the unit tests written for the [FormatsNumbers](/app/Traits/FormatsNumbers.php) trait the with [Pest](https://pestphp.com/):
+
+```bash
+docker compose -f compose.dev.yaml exec workspace bash
+php artisan test --testsuite=Unit
 ```
 
 ## How to Release

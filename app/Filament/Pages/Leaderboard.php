@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Models\RemoteWaffleEating;
 use App\Models\WaffleEating;
 use BackedEnum;
 use App\Models\User;
@@ -11,6 +12,7 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Support\Collection;
 
 class Leaderboard extends Page implements HasTable
 {
@@ -25,35 +27,62 @@ class Leaderboard extends Page implements HasTable
     public function table(Table $table): Table
     {
         return $table
-            ->records(function (?array $filters) {
-                // Always use a valid year: selected filter or default to current year
+            ->records(function (array $filters): Collection {
                 $selectedYear = $filters['year']['value'] ?? now()->year;
+                $location = $filters['location']['value'] ?? 'all';
 
-                // Sum waffles per user for the year
-                $waffleCounts = WaffleEating::query()
-                    ->selectRaw('user_id, COALESCE(SUM(count), 0) as total')
-                    ->whereYear('date', $selectedYear)
-                    ->groupBy('user_id')
-                    ->pluck('total', 'user_id'); // [user_id => total]
+                /** -------------------------
+                 * Office Waffle Eatings
+                 * ------------------------- */
+                $office = collect();
+                if (in_array($location, ['all', 'office'], true)) {
+                    $office = WaffleEating::query()
+                        ->selectRaw('user_id, SUM(count) as total')
+                        ->whereYear('date', $selectedYear)
+                        ->groupBy('user_id')
+                        ->pluck('total', 'user_id'); // [user_id => total]
+                }
 
-                // Get all users
-                $users = User::all();
+                /** -------------------------
+                 * Remote waffle eatings (approved only)
+                 * ------------------------- */
+                $remote = collect();
+                if (in_array($location, ['all', 'remote'], true)) {
+                    $remote = RemoteWaffleEating::query()
+                        ->selectRaw('user_id, SUM(count) as total')
+                        ->whereNotNull('approved_by')
+                        ->whereYear('date', $selectedYear)
+                        ->groupBy('user_id')
+                        ->pluck('total', 'user_id');
+                }
 
-                // Combine data
-                $data = $users->map(fn($user) => [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'year' => $selectedYear,
-                    'waffles_this_year' => $waffleCounts[$user->id] ?? 0,
-                ]);
+                /** -------------------------
+                 * Collect totals
+                 * ------------------------- */
+                $totals = collect();
+                foreach ($office as $userId => $count) {
+                    $totals[$userId] = ($totals[$userId] ?? 0) + (int) $count;
+                }
+                foreach ($remote as $userId => $count) {
+                    $totals[$userId] = ($totals[$userId] ?? 0) + (int) $count;
+                }
 
-                // Sort descending by waffles eaten and add rank
-                return $data
+                /** -------------------------
+                 * Build leaderboard rows
+                 * ------------------------- */
+                return User::query()
+                    ->get()
+                    ->map(fn (User $user) => [
+                        'id' => $user->id,
+                        'name' => $user->name,
+                        'waffles_this_year' => (int) ($totals[$user->id] ?? 0),
+                    ])
                     ->sortByDesc('waffles_this_year')
                     ->values()
-                    ->map(fn($record, $index) => array_merge($record, [
+                    ->map(fn ($row, $index) => [
+                        ...$row,
                         'rank' => $index + 1,
-                    ]));
+                    ]);
             })
             ->columns([
                 TextColumn::make('rank')
@@ -71,11 +100,24 @@ class Leaderboard extends Page implements HasTable
                 SelectFilter::make('year')
                     ->label('Year')
                     ->options(function () {
-                        $oldestYear = (int) WaffleEating::selectRaw('EXTRACT(YEAR FROM MIN(date)) AS year')->value('year');
-                        $years = range(now()->year, $oldestYear);
+                        $minOffice = WaffleEating::min('date');
+                        $minRemote = RemoteWaffleEating::min('date');
+                        $earliest = collect([$minOffice, $minRemote])->filter()->min();
+                        $startYear = $earliest ? (int) date('Y', strtotime($earliest)) : now()->year;
+                        $years = range(now()->year, $startYear);
                         return array_combine($years, $years);
                     })
                     ->default(now()->year)
+                    ->selectablePlaceholder(false),
+
+                SelectFilter::make('location')
+                    ->label('Location')
+                    ->options([
+                        'all' => 'All',
+                        'office' => 'Office',
+                        'remote' => 'Remote',
+                    ])
+                    ->default('all')
                     ->selectablePlaceholder(false),
             ])
             ->defaultSort('waffles_this_year', 'desc');

@@ -2,10 +2,12 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\RemoteWaffleEating;
 use App\Models\WaffleEating;
 use Filament\Widgets\ChartWidget;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class WafflesEatenChart extends ChartWidget
 {
@@ -52,18 +54,38 @@ class WafflesEatenChart extends ChartWidget
         $year = $this->pageFilters['year'] ?? now()->year;
         $maxMonth = $year === now()->year ? now()->month : 12;
 
-        $monthlyData = WaffleEating::selectRaw('EXTRACT(MONTH FROM date) AS month, SUM(count) AS total')
+        /* -----------------------------------------
+         | Office waffles per month
+         |------------------------------------------ */
+        $officeMonthly = WaffleEating::selectRaw('EXTRACT(MONTH FROM date) AS month, SUM(count) AS total')
             ->whereYear('date', $year)
             ->groupBy('month')
-            ->orderBy('month')
             ->pluck('total', 'month'); // [month => total]
 
+        /* -----------------------------------------
+         | Remote waffles per month (approved only)
+         |------------------------------------------ */
+        $remoteMonthly = RemoteWaffleEating::selectRaw('EXTRACT(MONTH FROM date) AS month, SUM(count) AS total')
+            ->whereYear('date', $year)
+            ->whereNotNull('approved_by')
+            ->groupBy('month')
+            ->pluck('total', 'month'); // [month => total]
+
+        /* -----------------------------------------
+         | Build chart data
+         |------------------------------------------ */
         $labels = [];
         $data = [];
 
         for ($month = 1; $month <= $maxMonth; $month++) {
             $labels[] = Carbon::create($year, $month)->format('M');
-            $data[] = $monthlyData[$month] ?? 0;
+
+            $office = $officeMonthly[$month] ?? 0;
+            $remote = $remoteMonthly[$month] ?? 0;
+
+            $data[] = $office + $remote;
+
+            // Insert debug snippet MVR5 here
         }
 
         return [

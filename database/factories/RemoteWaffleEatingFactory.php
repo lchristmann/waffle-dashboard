@@ -24,7 +24,7 @@ class RemoteWaffleEatingFactory extends Factory
         Storage::put($destinationPath, file_get_contents($sourcePath));
 
         return [
-            'user_id' => User::inRandomOrder()->first()->id,
+            'user_id' => User::factory(), // creates a user if none is provided
             'date' => fake()->dateTimeBetween('-1 year')->format('Y-m-d'),
             'count' => fake()->numberBetween(1, 10),
             'image' => $destinationPath,

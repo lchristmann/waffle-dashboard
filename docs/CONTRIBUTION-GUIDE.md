@@ -20,6 +20,6 @@ Instructions and context information:
     - **important:** Adjust the paths accordingly! (In VS Code, you can right-click the relevant file in [diagrams/adf-elements/libraries/](diagrams/adf-elements/libraries/) and choose Copy path.)
     - a complete example of a VS Code settings file can be found in [diagrams/adf-elements/settingsForLinuxFullExample.txt](diagrams/adf-elements/settingsForLinuxFullExample.json)
     - Note: If even one path is incorrect or there is another JSON error, the `Draw.io Integration` extension will not start at all
-    - **Advice (long-term solution):** Move the 4 XML files to another location on your PC — otherwise, the Draw.io Integration will only work as long as you never move or delete this project folder
+    - **Advice (long-term solution):** Move the 4 XML files to another location on your PC - otherwise, the Draw.io Integration will only work as long as you never move or delete this project folder
 - in Draw.io, you can then add the elements to the left palette by clicking `+ More Shapes` > select the `undefined` checkbox under "Custom Libraries" > `Apply`
 - if you're using the Draw.io Desktop program, to make the elements available, load the XML files from the [diagrams/adf-elements/libraries/](diagrams/adf-elements/libraries/) folder as libraries via `File -> Open library`

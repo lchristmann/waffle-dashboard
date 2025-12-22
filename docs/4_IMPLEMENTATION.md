@@ -419,6 +419,10 @@ php artisan make:filament-resource RemoteWaffleEating --simple --generate
 ```
 
 - small UI/UX improvement with the toggle instead of checkbox for the "MyRecords" filter on the two waffle eatings CRUD pages
+- add a FormatsNumbers trait to format numbers properly in stat overviews
+  - add unit tests for it with [Pest](https://pestphp.com/)
+- integrate the Remote Waffles into the Leaderboard and the Dashboard
+- add extensive instructions on how to manually test that the dashboard statistics are correct
 
 Some helpful documentation pages:
 
@@ -427,3 +431,7 @@ Some helpful documentation pages:
 - https://filamentphp.com/docs/4.x/tables/columns/image
 - https://laravel.com/docs/12.x/filesystem
 - [free for use images] https://pixabay.com/images/search/waffle/
+
+> Commits:
+>
+> - `56260ec2`: `feat: add waffle day events`

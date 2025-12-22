@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Collection;
 
 class WaffleEating extends Model
 {
@@ -32,22 +33,26 @@ class WaffleEating extends Model
         return $this->belongsTo(User::class, 'entered_by_user_id');
     }
 
-    // Count distinct days waffles were eaten in a given year
-    public static function waffleDaysInYear(int $year): int
+    public static function yearTotal(int $year): int
     {
         return static::query()
             ->whereYear('date', $year)
-            ->distinct('date')
-            ->count('date');
+            ->sum('count');
     }
 
-    // Count distinct days waffles were eaten in a given month
-    public static function waffleDaysInMonth(int $year, int $month): int
+    public static function participatorsInYear(int $year): Collection
     {
         return static::query()
             ->whereYear('date', $year)
-            ->whereMonth('date', $month)
+            ->distinct('user_id')
+            ->pluck('user_id');
+    }
+
+    public static function waffleDaysInYear(int $year): Collection
+    {
+        return static::query()
+            ->whereYear('date', $year)
             ->distinct('date')
-            ->count('date');
+            ->pluck('date');
     }
 }
