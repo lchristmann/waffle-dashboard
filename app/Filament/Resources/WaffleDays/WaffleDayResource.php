@@ -27,7 +27,7 @@ class WaffleDayResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDays;
 
-    protected static ?int $navigationSort = 50;
+    protected static ?int $navigationSort = 70;
 
     public static function shouldRegisterNavigation(): bool
     {

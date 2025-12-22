@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Constants\StorageConstants;
+use App\Models\GalleryImage;
 use App\Models\RemoteWaffleEating;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -74,16 +76,23 @@ class DatabaseSeeder extends Seeder
             ->create();
 
         // Create 10 random remote waffle eating records
-        Storage::deleteDirectory('remote-waffles'); // clear old remote waffle eating images
+        Storage::deleteDirectory(StorageConstants::REMOTE_WAFFLES); // clear old remote waffle eating images
         $admins = User::where('is_admin', true)->get();
         RemoteWaffleEating::factory()
             ->count(10)
-            ->state(function () use ($allUsers, $admins) {
-                return [
-                    'user_id' => $allUsers->random()->id,
-                    'approved_by' => rand(0, 1) ? $admins->random()->id : null,
-                ];
-            })
+            ->state(fn () => [
+                'user_id' => $allUsers->random()->id,
+                'approved_by' => rand(0, 1) ? $admins->random()->id : null,
+            ])
+            ->create();
+
+        // Create 12 images for the Gallery
+        Storage::deleteDirectory(StorageConstants::GALLERY_IMAGES); // clear old gallery images
+        GalleryImage::factory()
+            ->count(12)
+            ->state(fn () => [
+                'user_id' => $allUsers->random()->id
+            ])
             ->create();
     }
 }

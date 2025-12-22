@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\GalleryImage;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/info', function () {
@@ -45,3 +46,10 @@ Route::get('/health', function () {
 
     return response()->json($status, $httpStatus);
 });
+
+// Secure (authenticated) image delivery route for the Image Gallery Custom Page
+Route::get('/gallery-images/{galleryImage}', function (GalleryImage $galleryImage) {
+    abort_unless(auth()->check(), 403);
+
+    return Storage::response($galleryImage->path);
+})->name('gallery.image');

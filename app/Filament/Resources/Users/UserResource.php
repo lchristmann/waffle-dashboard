@@ -21,7 +21,7 @@ class UserResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
 
-    protected static ?int $navigationSort = 60;
+    protected static ?int $navigationSort = 80;
 
     public static function shouldRegisterNavigation(): bool
     {

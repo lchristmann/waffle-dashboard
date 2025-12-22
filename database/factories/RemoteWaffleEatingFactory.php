@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Constants\StorageConstants;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Storage;
@@ -19,7 +20,7 @@ class RemoteWaffleEatingFactory extends Factory
     public function definition(): array
     {
         $sourcePath = database_path('seeders/files/sample-waffle-image-' . (fake()->boolean ? '1' : '2') . '.jpg');
-        $destinationPath = 'remote-waffles/' . uniqid() . '.jpg';
+        $destinationPath = StorageConstants::REMOTE_WAFFLES . '/' . uniqid() . '.jpg';
 
         Storage::put($destinationPath, file_get_contents($sourcePath));
 

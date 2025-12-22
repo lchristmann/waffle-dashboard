@@ -24,6 +24,7 @@
 - [20. Custom Waffle Dashboard: Release your own one!](#20-custom-waffle-dashboard-release-your-own-one)
 - [21. Add Waffle Day Events](#21-add-waffle-day-events)
 - [22. Add Remote Waffles](#22-add-remote-waffles)
+- [23. Add Image Gallery](#23-add-image-gallery)
 
 ## 1. New Laravel+Docker project
 
@@ -434,4 +435,28 @@ Some helpful documentation pages:
 
 > Commits:
 >
-> - `56260ec2`: `feat: add waffle day events`
+> - `ae415027`: `feat: add remote waffles`
+> - `07470c82`: `feat: add remote waffles into dashboard & leaderboard`
+
+## 23. Add Image Gallery
+
+GitHub Issue: https://github.com/lchristmann/waffle-dashboard/issues/3
+
+- add a GalleryImage model, migration, policy and make a simple Filament resource from it
+  - add a factory and create the seeding
+- have a read-only custom Gallery page styled with Tailwind CSS
+  - stream the image files via an authenticated Laravel web route to the client
+
+```shell
+php artisan make:model GalleryImage -mf
+php artisan make:policy GalleryImagePolicy --model=GalleryImage
+php artisan make:filament-resource GalleryImage --simple --generate
+php artisan make:filament-page Gallery
+```
+
+Some helpful documentation pages:
+
+- https://filamentphp.com/docs/4.x/forms/file-upload#image-editor
+- https://filamentphp.com/docs/4.x/forms/hidden
+- https://filamentphp.com/docs/4.x/navigation/custom-pages
+- https://picsum.photos/

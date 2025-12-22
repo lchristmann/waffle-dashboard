@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\RemoteWaffleEatings;
 
+use App\Constants\StorageConstants;
 use App\Filament\Resources\RemoteWaffleEatings\Pages\ManageRemoteWaffleEatings;
 use App\Models\RemoteWaffleEating;
 use App\Models\WaffleDay;
@@ -33,7 +34,7 @@ class RemoteWaffleEatingResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCircleStack;
 
-    protected static ?int $navigationSort = 40;
+    protected static ?int $navigationSort = 50;
 
     public static function form(Schema $schema): Schema
     {
@@ -49,7 +50,7 @@ class RemoteWaffleEatingResource extends Resource
                 FileUpload::make('image')
                     ->label('Proof Photo')
                     ->image()
-                    ->directory('remote-waffles')
+                    ->directory(StorageConstants::REMOTE_WAFFLES)
                     ->required(),
             ]);
     }

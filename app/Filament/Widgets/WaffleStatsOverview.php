@@ -129,7 +129,7 @@ class WaffleStatsOverview extends BaseWidget
                 ->color('primary')
                 ->chart($officeByMonth),
 
-            Stat::make("Remote Waffles Eaten ({$year})", "$remoteTotal ({$remotePct}%)")
+            Stat::make("Remote Waffles ({$year})", "$remoteTotal ({$remotePct}%)")
                 ->description("Approved home-office waffles")
                 ->descriptionIcon('heroicon-m-circle-stack')
                 ->color('primary')
