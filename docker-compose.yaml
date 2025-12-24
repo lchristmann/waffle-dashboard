@@ -1,6 +1,6 @@
 services:
   web:
-    image: nginx:alpine
+    image: leanderchristmann/waffle-dashboard-nginx:2.1.0
     restart: unless-stopped # Automatically restart unless the service is explicitly stopped
     volumes:
       # Mount the 'laravel-storage-production' volume to '/var/www/storage' inside the container.
@@ -11,10 +11,6 @@ services:
       # -----------------------------------------------------------
       # Mount persistent storage (also read-only)
       - laravel-storage-production:/var/www/storage:ro
-      # Get the public folder via a shared volume from the php-fpm container
-      - laravel-public-production:/var/www/public:ro
-      # Custom nginx configs
-      - ./docker/deployment/nginx:/etc/nginx/conf.d/
     networks:
       - waffle-dashboard-network
     ports:
@@ -30,13 +26,11 @@ services:
 
   php-fpm:
     # For the php-fpm service, we will create a custom image to install the necessary PHP extensions and setup proper permissions.
-    image: leanderchristmann/waffle-dashboard:1.3.0
+    image: leanderchristmann/waffle-dashboard:2.1.0
     restart: unless-stopped
     volumes:
       # Mount persistent storage
       - laravel-storage-production:/var/www/storage  # Mount the storage volume
-      # Get the public folder via a shared volume to the nginx container
-      - laravel-public-production:/var/www/public
     env_file:
       - .env
     networks:
@@ -91,4 +85,3 @@ networks:
 volumes:
   postgres-data-production:
   laravel-storage-production:
-  laravel-public-production:

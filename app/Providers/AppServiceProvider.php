@@ -6,6 +6,7 @@ use App\Models\WaffleDay;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,6 +24,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if (config('app.env') !== 'local') {
+            URL::forceScheme('https');
+        }
+
         FilamentView::registerRenderHook(
             PanelsRenderHook::TOPBAR_BEFORE,
             function () {

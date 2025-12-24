@@ -28,6 +28,11 @@ The past development is documented in the [4_IMPLEMENTATION.md](docs/4_IMPLEMENT
   - [Leaderboard](#leaderboard)
 - [Testing](#testing)
 - [How to Release](#how-to-release)
+  - [Prepare](#prepare)
+  - [Build and Tag the Docker Images](#build-and-tag-the-docker-images)
+  - [Try it out](#try-it-out)
+  - [Publish the Docker Images](#publish-the-docker-images)
+  - [Commit, Push and Release](#commit-push-and-release)
 
 ## Prerequisites
 Ensure you have Docker and Docker Compose installed. You can verify by running:
@@ -395,9 +400,9 @@ php artisan test --testsuite=Unit
 
 ## How to Release
 
-> ⚠️ Test that whatever you've changed did not break the application: just run the below build command,
-> set that new release version in the `docker-compose.yaml` file
-> and then do `docker compose -f docker-compose.yaml up -d` here locally.
+### Prepare
+
+Log in to Docker Hub:
 
 ```shell
 docker login
@@ -409,7 +414,7 @@ Set a version that you want to release:
 VERSION=1.0.0
 ```
 
-Then build, tag and push the docker image:
+### Build and Tag the Docker Images
 
 ```shell
 docker build \
@@ -419,20 +424,56 @@ docker build \
   .
 ```
 
+Only after the `waffle-dashboard` (php-fpm) Docker Image has been built, can we build the Nginx Image.
+
 ```shell
-docker push leanderchristmann/waffle-dashboard:${VERSION}
-docker push leanderchristmann/waffle-dashboard:latest
-```
+docker build \
+  --build-arg VERSION=${VERSION} \
+  -f ./docker/deployment/nginx/Dockerfile \
+  -t leanderchristmann/waffle-dashboard-nginx:${VERSION} \
+  -t leanderchristmann/waffle-dashboard-nginx:latest \
+  .
+````
+
+### Try it out
+
+> ⚠️ Test that whatever you've changed did not break the application: just run the below build command,
+> set that new release version in the `docker-compose.yaml` file (for both the `web` and the `php-fpm` service)
+> and then do `docker compose -f docker-compose.yaml up -d` here locally.
 
 Set that new version in the `docker-compose.yaml`:
 
 ```yaml
+  web:
+      image: leanderchristmann/waffle-dashboard-nginx:1.0.0 # <--- here!!
+
   php-fpm:
     # For the php-fpm service, we will create a custom image to install the necessary PHP extensions and setup proper permissions.
     image: leanderchristmann/waffle-dashboard:1.0.0 # <--- here!!
 ```
 
-Now commit your changed code.
+> You can enter and browse the images for debugging as such:
+> 
+> ```shell
+> docker run -it leanderchristmann/waffle-dashboard:${VERSION} bash
+> docker run -it leanderchristmann/waffle-dashboard-nginx:${VERSION} sh
+> ```
+
+### Publish the Docker Images
+
+```shell
+docker push leanderchristmann/waffle-dashboard:${VERSION}
+docker push leanderchristmann/waffle-dashboard:latest
+```
+
+```shell
+docker push leanderchristmann/waffle-dashboard-nginx:${VERSION}
+docker push leanderchristmann/waffle-dashboard-nginx:latest
+```
+
+### Commit, Push and Release
+
+Now commit your changed code (including the `docker-compose.yaml` changes from above section [Try it out](#try-it-out)!).
 
 Also tag the Git release:
 

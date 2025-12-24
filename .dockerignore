@@ -15,6 +15,7 @@
 **/.toolstarget
 **/.vs
 **/.vscode
+**/.idea
 **/.next
 **/.cache
 **/*.*proj.user

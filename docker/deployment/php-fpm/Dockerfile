@@ -3,6 +3,7 @@ FROM php:8.4-fpm AS builder
 
 # Install system dependencies needed for PHP extensions and build tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
     curl \
     unzip \
     libpq-dev \
@@ -101,9 +102,6 @@ RUN sed -i '/\[www\]/a pm.status_path = /status' /usr/local/etc/php-fpm.d/zz-doc
 
 # Copy built app, vendor dependencies, and compiled assets from builder
 COPY --from=builder /var/www /var/www
-
-# Move public assets to a temporary folder (the entrypoint.sh script will copy them back and this will trigger the shared volume to work and the Nginx container to have the public folder contents, too)
-RUN mv /var/www/public /var/www/public-init
 
 # Set working directory
 WORKDIR /var/www

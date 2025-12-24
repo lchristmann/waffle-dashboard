@@ -15,18 +15,6 @@ fi
 # Remove storage-init directory
 rm -rf /var/www/storage-init
 
-# -----------------------------------------------------------
-# Initialize public directory if empty (shared with nginx)
-# -----------------------------------------------------------
-if [ ! "$(ls -A /var/www/public)" ]; then
-  echo "Populating public directory for nginx..."
-  cp -R /var/www/public-init/. /var/www/public
-  chown -R www-data:www-data /var/www/public
-fi
-
-# Remove public-init directory
-rm -rf /var/www/public-init
-
 # Run Laravel migrations
 # -----------------------------------------------------------
 # Ensure the database schema is up to date.

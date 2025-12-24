@@ -25,6 +25,7 @@
 - [21. Add Waffle Day Events](#21-add-waffle-day-events)
 - [22. Add Remote Waffles](#22-add-remote-waffles)
 - [23. Add Image Gallery](#23-add-image-gallery)
+- [24. Release `v2.1.0`](#24-release-v210)
 
 ## 1. New Laravel+Docker project
 
@@ -460,3 +461,25 @@ Some helpful documentation pages:
 - https://filamentphp.com/docs/4.x/forms/hidden
 - https://filamentphp.com/docs/4.x/navigation/custom-pages
 - https://picsum.photos/
+
+> Commits:
+>
+> - `291491da`: `feat: add image gallery`
+
+## 24. Release `v2.1.0`
+
+- rework the Docker Compose setup to ***not*** use a shared volume for the `/var/www/public` directory contents anymore, but instead have a custom Nginx Docker Image that copies those assets from the PHP-FPM Image
+  - adjust the developer documentation accordingly
+- make image file uploads work in prod by having HTTPS enforced and trusted proxies configured
+- get Tailwind CSS for Gallery page and Waffle Day Announcement Banner working by...
+  - ....fixing a typo in the `resources/filament/main/theme.css` file and
+  - ...including it in the Vite-built assets (`@vite()`) to be linked in the `<head>` section of every page
+- make the Docker build more robust by having Git installed as fallback for Composer downloads
+
+Some helpful documentation pages:
+
+- https://medium.com/@tugrulgedikli/fixing-mixed-content-errors-in-filament-v4-beta-the-select-component-ssl-issue-934345cf74c9
+- https://laravel.com/docs/12.x/requests
+- https://filamentphp.com/docs/4.x/styling/overview#creating-a-custom-theme
+- https://docs.docker.com/reference/cli/docker/buildx/build/: use the `--progress=plain` option to see command outputs (helpful in debugging a docker build)
+- https://docs.docker.com/reference/dockerfile/#arg
