@@ -26,6 +26,7 @@
 - [22. Add Remote Waffles](#22-add-remote-waffles)
 - [23. Add Image Gallery](#23-add-image-gallery)
 - [24. Release `v2.1.0`](#24-release-v210)
+- [25. Release `v2.1.1`](#25-release-v211)
 
 ## 1. New Laravel+Docker project
 
@@ -494,6 +495,7 @@ Some helpful documentation pages:
 - fix error when uploading large images and set `->maxSize(2048)` (2MB) for those file uploads instead
   - by heavily increasing PHP's and Livewire's file upload size limits...
   - ...so Filament can do the validation (else the file upload would be intercepted leaving Filament empty-handed and showing a cryptic error message)
+- make the production Docker build more robust by ensuring the `public/hot` Laravel Vite hot reloading file never exists there 
 
 ```shell
 php artisan livewire:publish --config
@@ -502,3 +504,7 @@ php artisan livewire:publish --config
 Some helpful documentation pages:
 
 - https://filamentphp.com/docs/4.x/forms/file-upload#uploading-large-files
+
+> Commits:
+>
+> - `b5229063`: `fix+release: v2.1.1, large image file uploads gracefully failing (validation by Filament shown in UI)`
