@@ -50,6 +50,7 @@ class RemoteWaffleEatingResource extends Resource
                 FileUpload::make('image')
                     ->label('Proof Photo')
                     ->image()
+                    ->maxSize(2048)
                     ->directory(StorageConstants::REMOTE_WAFFLES)
                     ->required(),
             ]);

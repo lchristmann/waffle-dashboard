@@ -483,3 +483,22 @@ Some helpful documentation pages:
 - https://filamentphp.com/docs/4.x/styling/overview#creating-a-custom-theme
 - https://docs.docker.com/reference/cli/docker/buildx/build/: use the `--progress=plain` option to see command outputs (helpful in debugging a docker build)
 - https://docs.docker.com/reference/dockerfile/#arg
+
+> Commits:
+>
+> - `15dfcd1c`: `build+setup+release: v2.1.0, copy assets instead of shared volume, setup file uploads & custom Tailwind CSS in Filament (fixed)`
+> - `b03a69df`: `docs: update screenshots`
+
+## 25. Release `v2.1.1`
+
+- fix error when uploading large images and set `->maxSize(2048)` (2MB) for those file uploads instead
+  - by heavily increasing PHP's and Livewire's file upload size limits...
+  - ...so Filament can do the validation (else the file upload would be intercepted leaving Filament empty-handed and showing a cryptic error message)
+
+```shell
+php artisan livewire:publish --config
+```
+
+Some helpful documentation pages:
+
+- https://filamentphp.com/docs/4.x/forms/file-upload#uploading-large-files

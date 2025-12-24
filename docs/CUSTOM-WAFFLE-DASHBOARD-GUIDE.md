@@ -118,7 +118,7 @@ If you want to include the latest changes from the public repository in your pri
 ```shell
 cd custom-waffle-dashboard
 git remote add public https://github.com/lchristmann/waffle-dashboard.git
-git pull public main # Creates a merge commit
+git pull --no-rebase public main # Creates a merge commit
 git push origin main
 ```
 
@@ -128,7 +128,7 @@ Your private repository now includes the most recent changes from the public rep
 
 ### On your PC
 
-First, create a private repository in your Docker image registry.
+First, create two private repositories (for the two Docker Images built below) in your Docker image registry.
 
 ```shell
 docker login
@@ -141,7 +141,7 @@ Set a version that you want to release:
 VERSION=1.0.0
 ```
 
-Then build, tag and push the docker image:
+Then build, tag and push the docker images:
 
 > Edit the Docker image repository names in the following commands!
 
@@ -153,14 +153,39 @@ docker build \
   .
 ```
 
+In the `./docker/deployment/nginx/Dockerfile` change the below line to pull from your previously released custom PHP-FPM waffle-dashboard Image.
+
+```Dockerfile
+FROM leanderchristmann/waffle-dashboard:${VERSION:-0.0.0} AS php-fpm-source
+# e.g. FROM username/custom-waffle-dashboard:${VERSION:-0.0.0} AS php-fpm-source
+```
+
+Now we can build the Nginx Image.
+
+```shell
+docker build \
+  --build-arg VERSION=${VERSION} \
+  -f ./docker/deployment/nginx/Dockerfile \
+  -t leanderchristmann/custom-waffle-dashboard-nginx:${VERSION} \
+  -t leanderchristmann/custom-waffle-dashboard-nginx:latest \
+  .
+````
+
+Push both images with their tags:
+
 ```shell
 docker push leanderchristmann/custom-waffle-dashboard:${VERSION}
 docker push leanderchristmann/custom-waffle-dashboard:latest
 ```
 
+```shell
+docker push leanderchristmann/custom-waffle-dashboard-nginx:${VERSION}
+docker push leanderchristmann/custom-waffle-dashboard-nginx:latest
+```
+
 ### On the Server
 
-Set your Docker image repository name and version in the `docker-compose.yaml` on your server:
+Set your Docker image repository names and version in the `docker-compose.yaml` on your server:
 
 ```shell
 cd /opt/waffle-dashboard
@@ -168,6 +193,9 @@ nano docker-compose.yaml
 ```
 
 ```yaml
+  web:
+      image: leanderchristmann/custom-waffle-dashboard-nginx:1.0.0 # <--- here!!
+
   php-fpm:
     # For the php-fpm service, we will create a custom image to install the necessary PHP extensions and setup proper permissions.
     image: leanderchristmann/custom-waffle-dashboard:1.0.0 # <!--- here
@@ -179,13 +207,5 @@ Run the below commands to rebuild the waffle-dashboard including your new privat
 docker login -u <your_user> # and enter your password when prompted
 docker compose pull
 docker compose down
-# The below 4 lines are only relevant if you've changed something in the `public` folder
-docker volume rm waffle-dashboard_laravel-public-production
-docker compose up -d
-docker compose stop php-fpm
-sudo chown -R 33:33 /var/lib/docker/volumes/waffle-dashboard_laravel-public-production/_data
-# End of the 4 lines
 docker compose up -d
 ```
-
-> If you've changed something in the storage folder, you must take special action as above with the public folder (because it's a volume, too).<br>

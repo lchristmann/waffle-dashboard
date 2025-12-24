@@ -53,6 +53,7 @@ class GalleryImageResource extends Resource
                         '4:3',
                         '1:1',
                     ])
+                    ->maxSize(2048)
                     ->directory(StorageConstants::GALLERY_IMAGES)
                     ->required(),
 
