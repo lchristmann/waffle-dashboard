@@ -51,6 +51,9 @@ class RemoteWaffleEatingResource extends Resource
                     ->label('Proof Photo')
                     ->image()
                     ->maxSize(2048)
+                    ->validationMessages([
+                        'max' => 'The image must not be larger than 2 MB.',
+                    ])
                     ->directory(StorageConstants::REMOTE_WAFFLES)
                     ->required(),
             ]);

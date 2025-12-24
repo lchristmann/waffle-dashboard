@@ -54,6 +54,9 @@ class GalleryImageResource extends Resource
                         '1:1',
                     ])
                     ->maxSize(2048)
+                    ->validationMessages([
+                        'max' => 'The image must not be larger than 2 MB.',
+                    ])
                     ->directory(StorageConstants::GALLERY_IMAGES)
                     ->required(),
 
