@@ -27,6 +27,7 @@
 - [23. Add Image Gallery](#23-add-image-gallery)
 - [24. Release `v2.1.0`](#24-release-v210)
 - [25. Release `v2.1.1`](#25-release-v211)
+- [26. Always Have Backups!](#26-always-have-backups)
 
 ## 1. New Laravel+Docker project
 
@@ -510,3 +511,20 @@ Some helpful documentation pages:
 >
 > - `b5229063`: `fix+release: v2.1.1, large image file uploads gracefully failing (validation by Filament shown in UI)`
 > - `c8b26487`: `docs(minor): finish v2.1.1 changelog`
+> - `2a880183`: `fix(minor): for v2.1.1 adapt nginx upload limit too`
+
+## 26. Always Have Backups!
+
+Add instructions to the [Waffle Installation Guide](WAFFLE-INSTALLATION-GUIDE.md) on how to implement both manual and
+scheduled periodic backups on a Linux server and how to use them for recovery in an emergency.
+
+Some helpful documentation pages:
+
+- https://www.ionos.com/digitalguide/server/security/postgresql-backup/
+- https://www.postgresql.org/docs/current/app-pgrestore.html
+- https://www.augmentedmind.de/2023/08/20/backup-docker-volumes/
+- https://wiki.ubuntuusers.de/tar/
+- https://stackoverflow.com/questions/4811738/how-to-log-cron-jobs
+  - https://stackoverflow.com/questions/818255/what-does-21-mean
+- https://laravel.com/docs/12.x/deployment
+  - https://laracasts.com/discuss/channels/laravel/should-i-also-add-optimizeclear-to-my-deployment-script

@@ -9,6 +9,12 @@ This document guides you through setting up the waffle dashboard, making it wate
 - [Secure and Polish your Waffles (HTTPS and a Domain)](#secure-and-polish-your-waffles-https-and-a-domain)
   - [In Your Domain Provider](#in-your-domain-provider)
   - [On Your Server](#on-your-server)
+- [Backup Your Waffles](#backup-your-waffles)
+  - [Backup Strategy](#backup-strategy)
+  - [Backup Script](#backup-script)
+  - [Doing a Manual Backup](#doing-a-manual-backup)
+  - [Set Up Periodic Backups](#set-up-periodic-backups)
+  - [Restore from a Backup](#restore-from-a-backup)
 - [Waffle Upgrade Guide](#waffle-upgrade-guide)
 
 ## Requirements
@@ -193,6 +199,120 @@ SSH into your server.
         - Click "Save"
     8. Now the application will be available under your domain (prefixed with `https://`).
     9. Remove the temporary firewall rule of allowing port 81.
+
+## Backup Your Waffles
+
+Your waffle dashboard stores application data in two places:
+
+| Data         | Location               | What it contains                               |
+|--------------|------------------------|------------------------------------------------|
+| **Database** | PostgreSQL             | All records (waffles, users, waffle days,...)  |
+| **Storage**  | Laravel storage volume | Uploaded gallery & remote waffle eating images |
+
+
+For reliable disaster recovery, back up both.
+
+### Backup Strategy
+
+The recommended approach is:
+
+1. **Dump the PostgreSQL database** using `pg_dump`
+2. **Archive the Laravel storage volume** using `tar`
+
+### Backup Script
+
+1. Create a backup script file and make it executable:
+    ```shell
+    cd /opt/waffle-dashboard
+    touch backup.sh
+    chmod +x backup.sh
+    ```
+
+2. Paste the contents from the [docs/code/backup.sh](code/backup.sh) file there.
+    ```shell
+    nano backup.sh
+    ```
+    > Notes on the script:
+    > 
+    > If you make two backups in the same minute, you'll overwrite the previous one.<br>(This is because the set backup folder name is `$(date +%Y-%m-%d_%H-%M)` with the most fine-grained time unit being the trailing `%M` minutes)
+    > 
+    > The script also removes backups older than 30 days to reduce disk usage.<br>Feel free to increase the 30 days time limit or comment the line out for infinitely stored backups.
+
+### Doing a Manual Backup
+
+Just execute the backup script:
+
+```shell
+/opt/waffle-dashboard/backup.sh
+```
+
+You can now copy the resulting folder `/opt/waffle-dashboard-backups/<today's date and time>` somewhere safe (another server, your local machine, cloud storage,...).<br>
+It contains two backup dump files `postgres.dump` and `storage-volume.tar.gz`
+
+### Set Up Periodic Backups
+
+Once your backup script is in place, you should **run it automatically at regular intervals** to ensure you always have recent copies of your waffles.
+
+1. Open the root crontab:
+    ```shell
+    sudo crontab -e
+    ```
+2. Add the following line to run the backup script every Sunday at 03:30:
+    ```text
+    30 3 * * 0 /opt/waffle-dashboard/backup.sh >> /var/log/waffle-backup.log 2>&1
+    ```
+    > To come up with your own cron expression for a different time interval, check out the [crontab guru](https://crontab.guru/) website and its [cron examples](https://crontab.guru/examples.html).
+
+    Each run creates a new folder `/opt/waffle-dashboard-backups/<today's date and time>`.<br>
+    Output and errors are logged to `/var/log/waffle-backup.log`.
+
+### Restore from a Backup
+
+If something goes wrong, and you need to recover your waffle data, you can restore both the database and the storage volume from a previously created backup folder.
+
+1. Enter the waffle-dashboard's directory.
+    ```shell
+    cd /opt/waffle-dashboard
+    ```
+2. Choose a backup to restore from.<br>List available backups:
+    ```shell
+    ls /opt/waffle-dashboard-backups
+    ```
+   Pick the folder you need, for example run (**insert your backup's datetime here!**):
+    ```shell
+    RESTORE_DIR="/opt/waffle-dashboard-backups/2025-12-29_22-19"
+    ```
+3. Restore the database (with the whole setup running - or at least the PostgreSQL container)
+    ```shell
+    cat "$RESTORE_DIR/postgres.dump" | docker compose exec -T postgres \
+      pg_restore -d app -U laravel --clean --if-exists
+    ```
+    > If the database doesn't even exist anymore, also use the `--create` option.
+4. Stop the application. This ensures no process writes to the storage while restoring.
+    ```shell
+    docker compose down
+    ```
+5. Restore the Laravel storage volume
+    ```shell
+   docker run --rm \
+      -v waffle-dashboard_laravel-storage-production:/data \
+      -v "$RESTORE_DIR:/backup" \
+      ubuntu bash -c "rm -rf /data/* /data/.[!.]* /data/..?* ; tar xzf /backup/storage-volume.tar.gz -C /data --strip-components=1"
+    ```
+   What happens here:
+   - the existing storage content is deleted 
+   - your archived storage data is extracted back into the volume 
+   > If your data set is large, extraction can take a while - that is normal.
+6. Start the application again
+    ```shell
+    docker compose up -d
+    ```
+7. Rebuild Laravel caches in one step to ensure the app uses fresh, consistent cache files:
+    ```shell
+    docker compose exec php-fpm php artisan optimize
+    ```
+
+Your waffle dashboard should now be restored to the exact state at the moment of the backup.
 
 ## Waffle Upgrade Guide
 
