@@ -1,6 +1,6 @@
 # Waffle Installation Guide <!-- omit in toc -->
 
-This document guides you through setting up the waffle dashboard, making it waterproof with HTTPS and how to upgrade it, if you've been using an old version while eating fresh waffles.
+This document guides you through setting up the waffle dashboard, making it waterproof with HTTPS, securing its precious data with backups and how to upgrade it, if you've been using an old version while eating fresh waffles.
 
 ## Table of Contents <!-- omit in toc -->
 

@@ -7,6 +7,7 @@ use App\Filament\Actions\WaffleEatingCreateAction;
 use App\Filament\Widgets\WaffleStatsOverview;
 use App\Filament\Widgets\WafflesEatenChart;
 use App\Filament\Widgets\WaffleDayParticipationsChart;
+use App\Models\RemoteWaffleEating;
 use App\Models\WaffleEating;
 use Filament\Forms\Components\Select;
 use Filament\Pages\Dashboard as BaseDashboard;
@@ -21,7 +22,6 @@ class Dashboard extends BaseDashboard
     public function getTitle(): string | Htmlable
     {
         $year = $this->filters['year'] ?? now()->year;
-
         return "Waffle Dashboard ({$year})";
     }
 
@@ -49,18 +49,15 @@ class Dashboard extends BaseDashboard
                     Select::make('year')
                         ->label('Year')
                         ->options(function () {
-                            $years = WaffleEating::query()
-                                ->selectRaw('DISTINCT EXTRACT(YEAR FROM date) AS year')
-                                ->orderByDesc('year')
-                                ->pluck('year')
-                                ->map(fn ($year) => (int) $year)
-                                ->toArray();
-
+                            $minOffice = WaffleEating::min('date');
+                            $minRemote = RemoteWaffleEating::min('date');
+                            $earliest = collect([$minOffice, $minRemote])->filter()->min();
+                            $startYear = $earliest ? (int) date('Y', strtotime($earliest)) : now()->year;
+                            $years = range(now()->year, $startYear);
                             return array_combine($years, $years);
                         })
                         ->default(now()->year)
-                        ->selectablePlaceholder(false)
-                        ->required(),
+                        ->selectablePlaceholder(false),
                 ]),
         ];
     }

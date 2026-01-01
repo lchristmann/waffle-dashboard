@@ -528,3 +528,18 @@ Some helpful documentation pages:
   - https://stackoverflow.com/questions/818255/what-does-21-mean
 - https://laravel.com/docs/12.x/deployment
   - https://laracasts.com/discuss/channels/laravel/should-i-also-add-optimizeclear-to-my-deployment-script
+
+> Commits:
+>
+> - `005da6f1`: `docs(backup): add instructions for database and storage backups + restore workflow`
+
+## 27. Release `v2.2.0`
+
+- fix broken Dashboard page year filter when no waffles exist for the current year
+  - by reusing the year filter options logic from the Leaderboard page
+- improve performance by adding `php artisan optimize` and `php artisan filament:optimize` to the app startup process
+  - previously config and routes were cached (which is the most important part), but now also events, views, Filament components and Blade icons will be
+
+Some helpful documentation pages:
+
+- https://filamentphp.com/docs/4.x/deployment

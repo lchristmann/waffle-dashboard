@@ -21,12 +21,12 @@ rm -rf /var/www/storage-init
 # -----------------------------------------------------------
 php artisan migrate --force
 
-# Clear and cache configurations
+# Clear and rebuild caches
 # -----------------------------------------------------------
-# Improves performance by caching config and routes.
-# -----------------------------------------------------------
-php artisan config:cache
-php artisan route:cache
+# Improves performance by caching Laravel's config, routes, events and views.
+php artisan optimize
+# Improves performance by caching Filament's components and Blade icons.
+php artisan filament:optimize
 
 # Run the default command
 exec "$@"

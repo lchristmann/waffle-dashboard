@@ -2,9 +2,10 @@
 
 "Give a man a waffle and he’ll eat for a day. Teach a man to waffle and he’ll never be sad again."
 
-> This project is dedicated to all the amazing companies made up of wonderful people who know how to really waffle it with their employees. Shine bright, one waffle at a time. The world needs more of you.
+> This project is dedicated to all the amazing companies - made up of wonderful people - who know how to really waffle it with their employees. Shine bright, one waffle at a time! The world needs more of you.
 
-The Waffle Dashboard is a lightweight, self-hostable application for tracking and celebrating your team/family/friend group's waffle consumption. It provides stats, leaderboards, and input forms to capture waffle-eating achievements.
+A self-hostable web app you can spin up on your own server to track waffle-eating achievements and preserve the memories behind them.
+Bring your squad together: track totals, share photos, organize events and cheer each other on!
 
 ![screenshot of the waffle dashboard](docs/screenshots/dashboard.png)
 _Check out the [docs/screenshots](docs/screenshots) folder._
@@ -34,8 +35,9 @@ For this project, I opted for a variant of the classic waterfall model, which ca
 
 The Markdown documents for the [Requirements Definition](#requirements-definition) and [Architecture](#architecture) phases are based on the [version 1.1.1 of the ADF documentation template](https://github.com/architecture-decomposition-framework/adf-documentation-template/blob/main/template/architecture-documentation-en.md), which belongs to the [Architecture Decomposition Framework (ADF)](https://www.iese.fraunhofer.de/blog/softwarearchitekturen-einfacher-designen-und-verstaendlicher-dokumentieren-mit-dem-fraunhofer-adf/) developed by [Fraunhofer IESE](https://www.iese.fraunhofer.de/en/aboutus.html#:~:text=The%20Fraunhofer%20Institute%20for%20Experimental,engineering%20for%20almost%2030%20years.).
 
-> Starting on Oct 31 2025 (from [IMPLEMENTATION.md step 21](docs/4_IMPLEMENTATION.md#21-add-waffle-day-events) onward), additional application features were managed via [GitHub Issues](https://github.com/lchristmann/waffle-dashboard/issues).
-> Their additions therefore do not appear in the first three documents below.
+Starting on Oct 31 2025 (from [IMPLEMENTATION.md step 21](docs/4_IMPLEMENTATION.md#21-add-waffle-day-events) onward), additional application features were managed via [GitHub Issues](https://github.com/lchristmann/waffle-dashboard/issues).
+Their additions do not appear in the first three documents below.
+The project thereby switched to and is now following an agile, iterative development approach well suited for further developing the software.
 
 ### Requirements Definition
 
@@ -55,7 +57,7 @@ See [docs/4_IMPLEMENTATION.md](docs/4_IMPLEMENTATION.md).
 
 ## Maintenance
 
-This project actively maintained by [me](https://github.com/lchristmann).
+This project is actively maintained by [me](https://github.com/lchristmann).
 
 For questions or support, just [email me](mailto:hello@lchristmann.com).
 
