@@ -76,8 +76,15 @@ git push origin main
 
 ### The App Name
 
-For the app name, you don't even need this whole process. Just edit the `APP_NAME=` variable in the `.env` on your server.
-This App Name is shown as the app's logo by default.
+For the app name, you don't even need this whole process.<br>
+Just edit the `APP_NAME=` variable in the `.env` on your server.<br>
+**This App Name is shown as the app's logo by default.**
+
+> To have the app name logo auto-translated, too, when switching languages (as described in the [Waffle Installation Guide > Basic Setup](WAFFLE-INSTALLATION-GUIDE.md#basic-setup)), a translation function `__()` is run:<br>
+>
+> - in [MainPanelProvider.php](../app/Providers/Filament/MainPanelProvider.php): `->brandName(fn () => __(config('app.name')));`
+>
+> If this should trouble you (in case your custom app name should be found as a key in the application's translation file for your language (e.g. [lang/de.json](../lang/de.json)) and be turned into something else unwittingly), you may remove the translation function `__()` there.
 
 ### The App's Logo
 

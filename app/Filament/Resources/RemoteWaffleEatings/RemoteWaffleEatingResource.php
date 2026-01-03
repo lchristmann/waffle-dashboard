@@ -43,7 +43,7 @@ class RemoteWaffleEatingResource extends Resource
                 DatePicker::make('date')->required()->native(false)
                     ->maxDate(now())->minDate(now()->subYears(100))
                     ->default(function () {
-                        return WaffleDay::mostRecent()?->date ?? now();
+                        return WaffleDay::mostRecentWithinDays(7)?->date ?? now();
                     }),
                 TextInput::make('count')->required()->integer()->minValue(1)->maxValue(100)->default(1),
 

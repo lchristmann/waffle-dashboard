@@ -26,4 +26,11 @@ class WaffleDay extends Model
             ->orderBy('date', 'desc')
             ->first();
     }
+
+    public static function mostRecentWithinDays(int $days): ?self
+    {
+        return self::mostRecent()?->date?->gte(now()->subDays($days))
+            ? self::mostRecent()
+            : null;
+    }
 }

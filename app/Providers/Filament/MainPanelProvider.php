@@ -50,6 +50,7 @@ class MainPanelProvider extends PanelProvider
             ])
             ->resourceCreatePageRedirect('index')
             ->resourceEditPageRedirect('index')
-            ->viteTheme('resources/css/filament/main/theme.css');
+            ->viteTheme('resources/css/filament/main/theme.css')
+            ->brandName(fn () => __(config('app.name')));
     }
 }

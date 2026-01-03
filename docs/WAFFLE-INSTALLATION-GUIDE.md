@@ -48,6 +48,8 @@ SSH into your server.
     ```shell
     nano .env
     ```
+   You may optionally change the below:
+    - `APP_TIMEZONE=UTC`: change the application's timezone to another one from the list of [timezones for PHP](https://www.php.net/manual/en/timezones.php), e.g. `Europe/Berlin`
 5. Create the Docker network and start the services
     ```shell
     docker network create waffle-dashboard-network
