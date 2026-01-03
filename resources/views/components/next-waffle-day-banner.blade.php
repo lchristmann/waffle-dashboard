@@ -14,7 +14,7 @@
 
     {{-- Waffle Day Info --}}
     <p class="text-sm/6 text-gray-100">
-        <strong class="font-semibold">Next Waffle Day: {{ $dateFormatted }}</strong>@if(!empty($nextWaffleDay->note))<svg viewBox="0 0 2 2" aria-hidden="true" class="mx-2 inline size-0.5 fill-current"><circle r="1" cx="1" cy="1" /></svg>{{ $nextWaffleDay->note }}@endif
+        <strong class="font-semibold">{{ __('Next Waffle Day: :date', ['date' => $dateFormatted]) }}</strong>@if(!empty($nextWaffleDay->note))<svg viewBox="0 0 2 2" aria-hidden="true" class="mx-2 inline size-0.5 fill-current"><circle r="1" cx="1" cy="1" /></svg>{{ $nextWaffleDay->note }}@endif
     </p>
 
     {{-- Dismiss Button --}}
@@ -24,7 +24,7 @@
             x-on:click="open = false"
             class="-m-3 p-3 focus-visible:-outline-offset-4"
         >
-            <span class="sr-only text-8xl accent-blue-300">Dismiss</span>
+            <span class="sr-only text-8xl accent-blue-300">{{ __('Dismiss') }}</span>
             <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5 text-gray-400 hover:text-gray-300">
                 <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
             </svg>

@@ -30,29 +30,42 @@ class RemoteWaffleEatingResource extends Resource
 {
     protected static ?string $model = RemoteWaffleEating::class;
 
-    protected static ?string $navigationLabel = 'Waffles (Remote)';
-
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCircleStack;
 
     protected static ?int $navigationSort = 50;
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Waffles (Remote)');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Waffle Eating') . ' (Remote)';
+    }
+
+    public static function getPluralLabel(): ?string
+    {
+        return __('Waffle Eatings') . ' (Remote)';
+    }
 
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->components([
-                DatePicker::make('date')->required()->native(false)
+                DatePicker::make('date')->label(__('Date'))->required()->native(false)
                     ->maxDate(now())->minDate(now()->subYears(100))
                     ->default(function () {
                         return WaffleDay::mostRecentWithinDays(7)?->date ?? now();
                     }),
-                TextInput::make('count')->required()->integer()->minValue(1)->maxValue(100)->default(1),
+                TextInput::make('count')->label(__('Count'))->required()->integer()->minValue(1)->maxValue(100)->default(1),
 
                 FileUpload::make('image')
-                    ->label('Proof Photo')
+                    ->label(__('Proof Photo'))
                     ->image()
                     ->maxSize(2048)
                     ->validationMessages([
-                        'max' => 'The image must not be larger than 2 MB.',
+                        'max' => __('The image must not be larger than 2 MB.'),
                     ])
                     ->directory(StorageConstants::REMOTE_WAFFLES)
                     ->required(),
@@ -63,14 +76,14 @@ class RemoteWaffleEatingResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('date')->date()->sortable(),
-                TextColumn::make('count')->sortable(),
-                TextColumn::make('user.name')->label('User')->searchable(),
-                ImageColumn::make('image')->disk('local'),
-                IconColumn::make('approved_by')->label('Approved')->boolean(),
-                TextColumn::make('approvedBy.name')->label('Approved By')->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('created_at')->dateTime()->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')->dateTime()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('date')->label(__('Date'))->date()->sortable(),
+                TextColumn::make('count')->label(__('Count'))->sortable(),
+                TextColumn::make('user.name')->label(__('User'))->searchable(),
+                ImageColumn::make('image')->label(__('Image'))->disk('local'),
+                IconColumn::make('approved_by')->label(__('Approved'))->boolean(),
+                TextColumn::make('approvedBy.name')->label(__('Approved By'))->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('created_at')->label(__('Created at'))->dateTime()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('updated_at')->label(__('Updated at'))->dateTime()->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort(function (Builder $query): Builder {
                 return $query
@@ -80,18 +93,18 @@ class RemoteWaffleEatingResource extends Resource
             ->filters([
                 // Optional "My Records" filter
                 Filter::make('ate')
-                    ->label('My Records')
+                    ->label(__('My Records'))
                     ->query(fn (Builder $query) => $query->where('user_id', auth()->id()))
                     ->toggle(),
 
                 // Optional manual filters
                 SelectFilter::make('user')
-                    ->label('Who ate')
+                    ->label(__('Who ate'))
                     ->relationship('user', 'name')
                     ->searchable()
                     ->preload(),
                 SelectFilter::make('approvedBy')
-                    ->label('Approved By')
+                    ->label(__('Approved By'))
                     ->relationship('approvedBy', 'name', function (Builder $query) {
                         $query->where('is_admin', true);
                     })
@@ -104,7 +117,7 @@ class RemoteWaffleEatingResource extends Resource
 
                 // Admin-only Approve Action
                 Action::make('approve')
-                    ->label('Approve')
+                    ->label(__('Approve'))
                     ->icon('heroicon-o-check-badge')
                     ->color('success')
                     ->visible(fn (RemoteWaffleEating $record) =>
@@ -114,7 +127,7 @@ class RemoteWaffleEatingResource extends Resource
                         $record->update(['approved_by' => auth()->id()])
                     )
                     ->requiresConfirmation()
-                    ->modalDescription('Have you reviewed the photo evidence?'),
+                    ->modalDescription(__('Have you reviewed the photo evidence?')),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

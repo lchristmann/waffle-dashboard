@@ -14,7 +14,6 @@ class WafflesEatenChart extends ChartWidget
     use InteractsWithPageFilters;
 
     protected static ?int $sort = 3;
-    protected ?string $description = 'Broken down by month';
     protected static bool $isLazy = false;
 
     protected int | string | array $columnSpan = [
@@ -24,8 +23,12 @@ class WafflesEatenChart extends ChartWidget
     public function getHeading(): string
     {
         $year = $this->pageFilters['year'] ?? now()->year;
+        return __('Waffles Eaten') . " ({$year})";
+    }
 
-        return "Waffles Eaten ({$year})";
+    public function getDescription(): ?string
+    {
+        return __('Broken down by month');
     }
 
     protected function getType(): string
@@ -92,7 +95,7 @@ class WafflesEatenChart extends ChartWidget
             'labels' => $labels,
             'datasets' => [
                 [
-                    'label' => 'Waffles eaten',
+                    'label' => __('Waffles eaten'),
                     'data' => $data,
                     'fill' => true,
                     'tension' => 0.25,

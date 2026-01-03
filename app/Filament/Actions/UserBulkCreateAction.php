@@ -23,27 +23,28 @@ class UserBulkCreateAction extends Action
         parent::setUp();
 
         $this
-            ->label('Bulk Create')
-            ->modalHeading('Create Multiple Users')
+            ->label(__('Bulk Create'))
+            ->modalHeading(__('Create Multiple Users'))
             ->schema([
                 Repeater::make('users')
-                    ->addActionLabel('Add another')
+                    ->addActionLabel(__('Add another'))
                     ->schema([
                         Grid::make()
                             ->schema([
-                                TextInput::make('name')->unique()->required()->maxLength(255),
-                                TextInput::make('email')->unique()->email()->maxLength(255)
+                                TextInput::make('name')->label(__('Name'))->unique()->required()->maxLength(255),
+                                TextInput::make('email')->label(__('Email'))->unique()->email()->maxLength(255)
                                     ->required(fn (Get $get): bool => filled($get('password')))
                                     ->live(onBlur: true),
 
                                 TextInput::make('password')
+                                    ->label(__('Password'))
                                     ->password()
                                     ->required(fn (Get $get): bool => filled($get('email')))
                                     ->dehydrateStateUsing(fn ($state) => $state ? Hash::make($state) : null)
                                     ->dehydrated()
                                     ->live(onBlur: true),
 
-                                Toggle::make('is_admin')->label('Admin')->inline(false),
+                                Toggle::make('is_admin')->label(__('Admin'))->inline(false),
                             ])
                     ])
                     ->reorderable(false)

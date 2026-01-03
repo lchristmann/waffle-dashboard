@@ -14,7 +14,7 @@ class ManageGalleryImages extends ManageRecords
     {
         return [
             CreateAction::make()
-                ->label('Create'),
+                ->label(__('Create')),
         ];
     }
 }

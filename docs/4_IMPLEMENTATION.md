@@ -28,6 +28,8 @@
 - [24. Release `v2.1.0`](#24-release-v210)
 - [25. Release `v2.1.1`](#25-release-v211)
 - [26. Always Have Backups!](#26-always-have-backups)
+- [27. Release `v2.2.0`](#27-release-v220)
+- [28. Add Multi-Language Support (`v2.3.0`)](#28-add-multi-language-support-v230)
 
 ## 1. New Laravel+Docker project
 
@@ -543,3 +545,34 @@ Some helpful documentation pages:
 Some helpful documentation pages:
 
 - https://filamentphp.com/docs/4.x/deployment
+
+> Commits:
+>
+> - `39376ba0`: `fix+perf+release: v2.2.0, fix year select in Dashboard, add optimize commands in entrypoint`
+
+## 28. Add Multi-Language Support (`v2.3.0`)
+
+- add multi-language support with localization for German
+  - lay out for project contributors how to add another language in the Contribution Guide
+- make the timezone configurable via a `.env` variable and have docs on how to configure it during software installation
+- improve UX by having the last waffle day as default DatePicker value only when within the last 7 days
+
+```shell
+composer require --dev laravel-lang/lang
+php artisan lang:add de
+```
+
+Some helpful documentation pages:
+
+- https://filamentexamples.com/project/filament-v4-multi-language-switcher
+- https://filamentphp.com/plugins/bezhansalleh-language-switch
+- https://laraveldaily.com/lesson/filament-4/multi-language-system-texts-labels-menus-1
+- https://laravel.com/docs/12.x/localization
+- https://stackoverflow.com/questions/32884388/change-timezone-in-lumen-or-laravel-5
+- https://stackoverflow.com/questions/29684111/how-to-compare-two-carbon-timestamps
+
+> Commits:
+>
+> - `2e3d28ab`: `feat: make timezone configurable, have last waffle day only as DatePickers default when within last 7 days`
+> - `c98929aa`: `chore(deps): composer update (filament public assets)`
+> - `...`: `feat(lang)+docs+release: v2.3.0, add German localization and a language switch, document how to add new languages`

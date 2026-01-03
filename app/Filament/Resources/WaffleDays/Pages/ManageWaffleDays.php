@@ -14,7 +14,7 @@ class ManageWaffleDays extends ManageRecords
     {
         return [
             CreateAction::make()
-                ->label('Create'),
+                ->label(__('Create')),
         ];
     }
 }

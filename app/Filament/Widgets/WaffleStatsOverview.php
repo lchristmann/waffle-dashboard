@@ -117,32 +117,32 @@ class WaffleStatsOverview extends BaseWidget
          | Stats
          |---------------------------------------------------------- */
         return [
-            Stat::make("Waffles Eaten ({$year})", $total)
-                ->description("Office + Remote")
+            Stat::make(__('Waffles Eaten') . " ({$year})", $total)
+                ->description(__('Office + Remote'))
                 ->descriptionIcon('heroicon-m-circle-stack')
                 ->color('primary')
                 ->chart($totalByMonth),
 
-            Stat::make("Office Waffles ({$year})", "{$officeTotal} ({$officePct}%)")
-                ->description("Eaten at the office")
+            Stat::make(__('Office Waffles') . " ({$year})", "{$officeTotal} ({$officePct}%)")
+                ->description(__('Eaten at the office'))
                 ->descriptionIcon('heroicon-m-circle-stack')
                 ->color('primary')
                 ->chart($officeByMonth),
 
-            Stat::make("Remote Waffles ({$year})", "$remoteTotal ({$remotePct}%)")
-                ->description("Approved home-office waffles")
+            Stat::make(__('Remote Waffles') . " ({$year})", "$remoteTotal ({$remotePct}%)")
+                ->description(__('Approved home-office waffles'))
                 ->descriptionIcon('heroicon-m-circle-stack')
                 ->color('primary')
                 ->chart($remoteByMonth),
 
-            Stat::make("People Participated ({$year})", $people)
-                ->description('Users who ate waffles')
+            Stat::make(__('People Participated') . " ({$year})", $people)
+                ->description(__('Users who ate waffles'))
                 ->descriptionIcon('heroicon-m-users')
                 ->color('primary')
                 ->chart($peopleByMonth),
 
-            Stat::make("Waffle Days ({$year})", $days)
-                ->description('Number of days waffles were eaten')
+            Stat::make(__('Waffle Days') . " ({$year})", $days)
+                ->description(__('Number of days waffles were eaten'))
                 ->descriptionIcon('heroicon-m-calendar-days')
                 ->color('primary')
                 ->chart($daysByMonth),

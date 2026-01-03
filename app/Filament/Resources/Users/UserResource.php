@@ -23,6 +23,21 @@ class UserResource extends Resource
 
     protected static ?int $navigationSort = 80;
 
+    public static function getNavigationLabel(): string
+    {
+        return __('Users');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('User');
+    }
+
+    public static function getPluralLabel(): ?string
+    {
+        return __('Users');
+    }
+
     public static function shouldRegisterNavigation(): bool
     {
         return auth()->user()?->isAdmin() ?? false;

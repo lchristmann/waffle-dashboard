@@ -22,7 +22,7 @@ class Dashboard extends BaseDashboard
     public function getTitle(): string | Htmlable
     {
         $year = $this->filters['year'] ?? now()->year;
-        return "Waffle Dashboard ({$year})";
+        return __('Waffle Dashboard') . " ({$year})";
     }
 
     public function getWidgets(): array
@@ -42,12 +42,12 @@ class Dashboard extends BaseDashboard
     protected function getHeaderActions(): array
     {
         return [
-            WaffleEatingCreateAction::make()->keyBindings(['command+shift+c', 'ctrl+shift+c'])->tooltip('Shortcut: Ctrl+Shift+C'),
-            WaffleEatingBulkCreateAction::make()->keyBindings(['command+shift+b', 'ctrl+shift+b'])->tooltip('Shortcut: Ctrl+Shift+B'),
-            FilterAction::make()->label('Change Year')
+            WaffleEatingCreateAction::make()->keyBindings(['command+shift+c', 'ctrl+shift+c'])->tooltip(__('Shortcut: Ctrl+Shift+C')),
+            WaffleEatingBulkCreateAction::make()->keyBindings(['command+shift+b', 'ctrl+shift+b'])->tooltip(__('Shortcut: Ctrl+Shift+B')),
+            FilterAction::make()->label(__('Change Year'))
                 ->schema([
                     Select::make('year')
-                        ->label('Year')
+                        ->label(__('Year'))
                         ->options(function () {
                             $minOffice = WaffleEating::min('date');
                             $minRemote = RemoteWaffleEating::min('date');

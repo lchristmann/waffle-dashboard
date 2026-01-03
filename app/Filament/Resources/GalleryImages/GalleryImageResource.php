@@ -28,24 +28,37 @@ class GalleryImageResource extends Resource
 {
     protected static ?string $model = GalleryImage::class;
 
-    protected static ?string $navigationLabel = 'Image Uploads';
-
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPhoto;
 
     protected static ?int $navigationSort = 60;
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Image Uploads');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Gallery Image');
+    }
+
+    public static function getPluralLabel(): ?string
+    {
+        return __('Gallery Images');
+    }
 
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->components([
-                DatePicker::make('date')->required()->native(false)
+                DatePicker::make('date')->label(__('Date'))->required()->native(false)
                     ->maxDate(now())->minDate(now()->subYears(100))
                     ->default(function () {
                         return WaffleDay::mostRecentWithinDays(7)?->date ?? now();
                     }),
 
                 FileUpload::make('path')
-                    ->label('Image')
+                    ->label(__('Image'))
                     ->image()
                     ->imageEditor()
                     ->imageEditorAspectRatios([
@@ -55,7 +68,7 @@ class GalleryImageResource extends Resource
                     ])
                     ->maxSize(2048)
                     ->validationMessages([
-                        'max' => 'The image must not be larger than 2 MB.',
+                        'max' => __('The image must not be larger than 2 MB.'),
                     ])
                     ->directory(StorageConstants::GALLERY_IMAGES)
                     ->required(),
@@ -69,22 +82,22 @@ class GalleryImageResource extends Resource
         return $table
             ->columns([
                 ImageColumn::make('path')->disk('local')->square(),
-                TextColumn::make('date')->date()->sortable(),
-                TextColumn::make('user.name')->label('Uploaded by')->sortable()->searchable(),
-                TextColumn::make('created_at')->dateTime()->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')->dateTime()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('date')->label(__('Date'))->date()->sortable(),
+                TextColumn::make('user.name')->label(__('Uploaded by'))->sortable()->searchable(),
+                TextColumn::make('created_at')->label(__('Created at'))->dateTime()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('updated_at')->label(__('Updated at'))->dateTime()->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('date', 'desc')
             ->filters([
                 // Optional "My Uploads" filter
                 Filter::make('uploaded_by_me')
-                    ->label('My Uploads')
+                    ->label(__('My Uploads'))
                     ->query(fn (Builder $query) => $query->where('user_id', auth()->id()))
                     ->toggle(),
 
                 // Optional "Uploaded By" filter
                 SelectFilter::make('user')
-                    ->label('Uploaded By')
+                    ->label(__('Uploaded by'))
                     ->relationship('user', 'name')
                     ->searchable()
                     ->preload(),

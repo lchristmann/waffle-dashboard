@@ -3,3 +3,4 @@
 @source '../../../../app/Filament';
 @source '../../../../resources/views/filament';
 @source '../../../../resources/views/components';
+@source '../../../../vendor/bezhansalleh/filament-language-switch/resources/views/**/*.blade.php';

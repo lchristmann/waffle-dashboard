@@ -12,17 +12,26 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Collection;
 
 class Leaderboard extends Page implements HasTable
 {
     use InteractsWithTable;
 
-    protected static ?string $navigationLabel = 'Leaderboard';
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-trophy';
-    protected static ?string $title = 'Waffle Leaderboard';
     protected string $view = 'filament.pages.leaderboard';
     protected static ?int $navigationSort = 20;
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Leaderboard');
+    }
+
+    public function getTitle(): string|Htmlable
+    {
+        return __('Waffle Leaderboard');
+    }
 
     public function table(Table $table): Table
     {
@@ -86,19 +95,19 @@ class Leaderboard extends Page implements HasTable
             })
             ->columns([
                 TextColumn::make('rank')
-                    ->label('Rank')
+                    ->label(__('Rank'))
                     ->state(fn(array $record) => match ($record['rank']) {
                         1 => '🥇',
                         2 => '🥈',
                         3 => '🥉',
                         default => (string) $record['rank'],
                     }),
-                TextColumn::make('name')->label('User'),
-                TextColumn::make('waffles_this_year')->label('Waffles Eaten'),
+                TextColumn::make('name')->label(__('User')),
+                TextColumn::make('waffles_this_year')->label(__('Waffles Eaten')),
             ])
             ->filters([
                 SelectFilter::make('year')
-                    ->label('Year')
+                    ->label(__('Year'))
                     ->options(function () {
                         $minOffice = WaffleEating::min('date');
                         $minRemote = RemoteWaffleEating::min('date');
@@ -111,11 +120,11 @@ class Leaderboard extends Page implements HasTable
                     ->selectablePlaceholder(false),
 
                 SelectFilter::make('location')
-                    ->label('Location')
+                    ->label(__('waffle-dashboard.location'))
                     ->options([
-                        'all' => 'All',
-                        'office' => 'Office',
-                        'remote' => 'Remote',
+                        'all' => __('All'),
+                        'office' => __('Office'),
+                        'remote' => __('Remote'),
                     ])
                     ->default('all')
                     ->selectablePlaceholder(false),

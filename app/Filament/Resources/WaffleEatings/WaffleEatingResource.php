@@ -26,25 +26,38 @@ class WaffleEatingResource extends Resource
 {
     protected static ?string $model = WaffleEating::class;
 
-    protected static ?string $navigationLabel = 'Waffles';
-
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCircleStack;
 
     protected static ?int $navigationSort = 40;
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Waffles');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Waffle Eating');
+    }
+
+    public static function getPluralLabel(): ?string
+    {
+        return __('Waffle Eatings');
+    }
 
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->components([
-                DatePicker::make('date')->required()->native(false)
+                DatePicker::make('date')->label(__('Date'))->required()->native(false)
                     ->maxDate(now())->minDate(now()->subYears(100))
                     ->default(function () {
                         return WaffleDay::mostRecentWithinDays(7)?->date ?? now();
                     }),
-                TextInput::make('count')->required()->integer()->minValue(1)->maxValue(100)->default(1),
+                TextInput::make('count')->label(__('Count'))->required()->integer()->minValue(1)->maxValue(100)->default(1),
 
                 // Select user only on create
-                Select::make('user_id')->label('Who ate')
+                Select::make('user_id')->label(__('Who ate'))
                     ->relationship('user', 'name')
                     ->default(fn () => auth()->id())
                     ->visible(fn (string $context) => $context === 'create')
@@ -56,12 +69,12 @@ class WaffleEatingResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('date')->date()->sortable(),
-                TextColumn::make('count')->sortable(),
-                TextColumn::make('user.name')->label('Who ate')->searchable(),
-                TextColumn::make('enteredBy.name')->label('Entered by')->searchable()->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('created_at')->dateTime()->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')->dateTime()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('date')->label(__('Date'))->date()->sortable(),
+                TextColumn::make('count')->label(__('Count'))->sortable(),
+                TextColumn::make('user.name')->label(__('User'))->searchable(),
+                TextColumn::make('enteredBy.name')->label(__('Entered by'))->searchable()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('created_at')->label(__('Created at'))->dateTime()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('updated_at')->label(__('Updated at'))->dateTime()->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort(function (Builder $query): Builder {
                 return $query
@@ -71,7 +84,7 @@ class WaffleEatingResource extends Resource
             ->filters([
                 // Optional "My Records" filter (ate or entered)
                 Filter::make('ate_or_entered')
-                    ->label('My Records')
+                    ->label(__('My Records'))
                     ->query(fn ($query) => $query->where(function ($q) {
                         $q->where('user_id', auth()->id())
                             ->orWhere('entered_by_user_id', auth()->id());
@@ -80,12 +93,12 @@ class WaffleEatingResource extends Resource
 
                 // Optional manual filters
                 SelectFilter::make('user')
-                    ->label('Who ate')
+                    ->label(__('Who ate'))
                     ->relationship('user', 'name')
                     ->searchable()
                     ->preload(),
                 SelectFilter::make('enteredBy')
-                    ->label('Entered by')
+                    ->label(__('Entered by'))
                     ->relationship('enteredBy', 'name')
                     ->searchable()
                     ->preload(),

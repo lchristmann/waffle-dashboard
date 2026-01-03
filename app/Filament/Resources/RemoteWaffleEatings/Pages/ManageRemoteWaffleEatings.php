@@ -14,7 +14,7 @@ class ManageRemoteWaffleEatings extends ManageRecords
     {
         return [
             CreateAction::make()
-                ->label('Create')
+                ->label(__('Create'))
                 ->mutateDataUsing(fn (array $data) => [
                     ...$data,
                     'user_id' => auth()->id(),

@@ -22,20 +22,21 @@ class WaffleEatingCreateAction extends CreateAction
         parent::setUp();
 
         $this
-            ->label('Create')
+            ->label(__('Create'))
+            ->modalHeading(__('Create Waffle Eating'))
             ->model(WaffleEating::class)
             ->schema([
                 Grid::make()
                     ->schema([
-                        DatePicker::make('date')->required()->native(false)
+                        DatePicker::make('date')->label(__('Date'))->required()->native(false)
                             ->maxDate(now())->minDate(now()->subYears(100))
                             ->default(function () {
                                 return WaffleDay::mostRecentWithinDays(7)?->date ?? now();
                             }),
-                        TextInput::make('count')->required()->integer()->minValue(1)->maxValue(100)->default(1),
+                        TextInput::make('count')->label(__('Count'))->required()->integer()->minValue(1)->maxValue(100)->default(1),
 
                         Select::make('user_id')
-                            ->label('Who ate')
+                            ->label(__('Who ate'))
                             ->options(fn () => User::orderBy('name')->pluck('name', 'id'))
                             ->default(fn () => auth()->id())
                             ->required(),

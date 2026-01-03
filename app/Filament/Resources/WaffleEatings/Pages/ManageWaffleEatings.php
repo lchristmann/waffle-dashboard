@@ -15,7 +15,7 @@ class ManageWaffleEatings extends ManageRecords
     {
         return [
             CreateAction::make()
-                ->label('Create')
+                ->label(__('Create'))
                 ->mutateDataUsing(function (array $data): array {
                     // Set the entered_by_user_id automatically
                     $data['entered_by_user_id'] = auth()->id();

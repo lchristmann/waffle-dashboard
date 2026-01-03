@@ -16,11 +16,11 @@ class UsersTable
     {
         return $table
             ->columns([
-                TextColumn::make('name')->searchable()->sortable(),
-                TextColumn::make('email')->searchable()->sortable(),
-                IconColumn::make('is_admin')->label('Admin')->boolean()->sortable()->falseColor('gray'),
-                TextColumn::make('created_at')->dateTime()->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')->dateTime()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('name')->label(__('Name'))->searchable()->sortable(),
+                TextColumn::make('email')->label(__('Email'))->searchable()->sortable(),
+                IconColumn::make('is_admin')->label(__('Admin'))->boolean()->sortable()->falseColor('gray'),
+                TextColumn::make('created_at')->label(__('Created at'))->dateTime()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('updated_at')->label(__('Updated at'))->dateTime()->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([

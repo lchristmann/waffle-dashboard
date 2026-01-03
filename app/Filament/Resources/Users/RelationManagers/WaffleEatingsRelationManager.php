@@ -23,12 +23,12 @@ class WaffleEatingsRelationManager extends RelationManager
     {
         return $schema
             ->components([
-                DatePicker::make('date')->required()->native(false)
+                DatePicker::make('date')->label(__('Date'))->required()->native(false)
                     ->maxDate(now())->minDate(now()->subYears(100))
                     ->default(function () {
                         return WaffleDay::mostRecentWithinDays(7)?->date ?? now();
                     }),
-                TextInput::make('count')->required()->integer()->minValue(1)->maxValue(100)->default(1),
+                TextInput::make('count')->label(__('Count'))->required()->integer()->minValue(1)->maxValue(100)->default(1),
             ]);
     }
 
@@ -37,11 +37,11 @@ class WaffleEatingsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('date')
             ->columns([
-                TextColumn::make('date')->date()->sortable(),
-                TextColumn::make('count')->sortable(),
-                TextColumn::make('enteredBy.name')->label('Entered by')->sortable()->toggleable(),
-                TextColumn::make('created_at')->dateTime()->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')->dateTime()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('date')->label(__('Date'))->date()->sortable(),
+                TextColumn::make('count')->label(__('Count'))->sortable(),
+                TextColumn::make('enteredBy.name')->label(__('Entered by'))->sortable()->toggleable(),
+                TextColumn::make('created_at')->label(__('Created at'))->dateTime()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('updated_at')->label(__('Updated at'))->dateTime()->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('date', 'desc')
             ->filters([
@@ -49,6 +49,7 @@ class WaffleEatingsRelationManager extends RelationManager
             ])
             ->headerActions([
                 CreateAction::make()
+                    ->modalHeading(__('Create Waffle Eating'))
                     ->mutateDataUsing(function (array $data): array {
                         $data['entered_by_user_id'] = auth()->id();
                         return $data;

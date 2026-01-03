@@ -29,6 +29,21 @@ class WaffleDayResource extends Resource
 
     protected static ?int $navigationSort = 70;
 
+    public static function getNavigationLabel(): string
+    {
+        return __('Waffle Days');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Waffle Day');
+    }
+
+    public static function getPluralLabel(): ?string
+    {
+        return __('Waffle Days');
+    }
+
     public static function shouldRegisterNavigation(): bool
     {
         return auth()->user()?->isAdmin() ?? false;
@@ -39,15 +54,15 @@ class WaffleDayResource extends Resource
         return $schema
             ->components([
                 DatePicker::make('date')
-                    ->label('Waffle Day Date')
+                    ->label(__('Waffle Day Date'))
                     ->required()
                     ->unique()
                     ->native(false)
                     ->default(Carbon::now()->next(CarbonInterface::THURSDAY)->addWeek()),
 
                 TextInput::make('note')
-                    ->label('Note / Description')
-                    ->placeholder('Optional - e.g. shifted to Tuesday due to holiday'),
+                    ->label(__('Note / Description'))
+                    ->placeholder(__('Optional - e.g. shifted to Tuesday due to holiday')),
             ]);
     }
 
@@ -55,14 +70,14 @@ class WaffleDayResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('date')->date()->sortable(),
-                TextColumn::make('note')->limit(50),
-                TextColumn::make('created_at')->since(),
+                TextColumn::make('date')->label(__('Date'))->date()->sortable(),
+                TextColumn::make('note')->label(__('Note / Description'))->limit(50),
+                TextColumn::make('created_at')->label(__('Created'))->since(),
             ])
             ->defaultSort('date')
             ->filters([
                 Filter::make('upcoming')
-                    ->label('Upcoming Only')
+                    ->label(__('Upcoming Only'))
                     ->default()
                     ->query(fn(Builder $query): Builder =>
                         $query->whereDate('date', '>=', Carbon::today())

@@ -12,13 +12,13 @@
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             @foreach ($images as $image)
                 <div class="rounded-md overflow-hidden shadow">
-                    <img alt="Gallery Image"
+                    <img alt="{{ __('Gallery Image') }}"
                         src="{{ route('gallery.image', $image) }}"
                         class="w-full h-40 object-cover"
                     />
 
                     <div class="p-2 text-xs text-gray-500">
-                        {{ $image->date->toFormattedDateString() }}
+                        {{ $image->date->isoFormat('LL') }}
                     </div>
                 </div>
             @endforeach

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\WaffleDay;
+use BezhanSalleh\LanguageSwitch\LanguageSwitch;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Support\Facades\Auth;
@@ -42,7 +43,9 @@ class AppServiceProvider extends ServiceProvider
                     return null;
                 }
 
-                $dateFormatted = $nextWaffleDay->date->format('l, M j, Y'); // e.g. Thursday, Dec 11, 2025
+                $dateFormatted = $nextWaffleDay->date
+                    ->locale(app()->getLocale())
+                    ->translatedFormat('l, M j, Y');  // e.g. Thursday, Dec 11, 2025 or Donnerstag, Jan 8, 2026
 
                 return view('components.next-waffle-day-banner', [
                     'nextWaffleDay' => $nextWaffleDay,
@@ -50,5 +53,10 @@ class AppServiceProvider extends ServiceProvider
                 ]);
             }
         );
+
+        LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+            $switch
+                ->locales(['en','de']);
+        });
     }
 }

@@ -14,7 +14,6 @@ class WaffleDayParticipationsChart extends ChartWidget
     use InteractsWithPageFilters;
 
     protected static ?int $sort = 4;
-    protected ?string $description = 'People having eaten a waffle per month';
     protected static bool $isLazy = false;
 
     protected int | string | array $columnSpan = [
@@ -24,8 +23,12 @@ class WaffleDayParticipationsChart extends ChartWidget
     public function getHeading(): string
     {
         $year = $this->pageFilters['year'] ?? now()->year;
+        return __('Waffle Day Participations') . " ({$year})";
+    }
 
-        return "Waffle Day Participations ({$year})";
+    public function getDescription(): ?string
+    {
+        return __('People having eaten a waffle per month');
     }
 
     protected function getType(): string
@@ -104,7 +107,7 @@ class WaffleDayParticipationsChart extends ChartWidget
             'labels' => $labels,
             'datasets' => [
                 [
-                    'label' => 'Participations',
+                    'label' => __('Participations'),
                     'data' => $data,
                     'fill' => true,
                     'tension' => 0.25,
