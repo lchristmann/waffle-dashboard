@@ -575,4 +575,4 @@ Some helpful documentation pages:
 >
 > - `2e3d28ab`: `feat: make timezone configurable, have last waffle day only as DatePickers default when within last 7 days`
 > - `c98929aa`: `chore(deps): composer update (filament public assets)`
-> - `...`: `feat(lang)+docs+release: v2.3.0, add German localization and a language switch, document how to add new languages`
+> - `d70d5874`: `feat(lang)+docs+release: v2.3.0, add German localization and a language switch, document how to add new languages`

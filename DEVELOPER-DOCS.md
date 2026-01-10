@@ -440,6 +440,8 @@ docker build \
 > ⚠️ Test that whatever you've changed did not break the application: just run the below build command,
 > set that new release version in the `docker-compose.yaml` file (for both the `web` and the `php-fpm` service)
 > and then do `docker compose -f docker-compose.yaml up -d` here locally.
+>
+> In a new setup, you must create the docker network and your admin user, as described in the [Installation Guide > Basic Setup](docs/WAFFLE-INSTALLATION-GUIDE.md#basic-setup).
 
 Set that new version in the `docker-compose.yaml`:
 

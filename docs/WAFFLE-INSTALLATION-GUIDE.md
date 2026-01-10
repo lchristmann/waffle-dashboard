@@ -36,7 +36,6 @@ SSH into your server.
 2. Download the `docker-compose.yaml` and the nginx `default.conf` file:
     ```shell
     curl -L https://raw.githubusercontent.com/lchristmann/waffle-dashboard/main/docker-compose.yaml -o docker-compose.yaml
-   curl -L https://raw.githubusercontent.com/lchristmann/waffle-dashboard/main/docker/deployment/nginx/default.conf -o docker/deployment/nginx/default.conf
     ```
    > You can customize the server port that the waffle-dashboard will be running on by changing one line in the `docker-compose.yaml`.<br>
    > If you change the `"${NGINX_PORT:-80}:80"` under the `web` service e.g. to `"8080:80"`, it will run on port 8080 on the server.
@@ -176,7 +175,7 @@ SSH into your server.
     6. Find the container name of your Waffle Dashboard's `web` service, usually `waffle-dashboard-web-1`.
        ```shell
        cd /opt/waffle-dashboard
-       docker ps --format "{{.Names}} {{.Image}}" | grep "nginx:alpine" | awk '{print $1}'
+       docker ps --format "{{.Names}} {{.Image}}" | grep "waffle-dashboard-nginx" | awk '{print $1}'
        ```
     7. In the Nginx Proxy Manager visit Dashboard > Proxy Hosts > Add Proxy Hosts:
         - "Details" Tab
