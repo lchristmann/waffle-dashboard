@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\GalleryImage;
+use Filament\Http\Middleware\Authenticate;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/info', function () {
@@ -49,7 +50,5 @@ Route::get('/health', function () {
 
 // Secure (authenticated) image delivery route for the Image Gallery Custom Page
 Route::get('/gallery-images/{galleryImage}', function (GalleryImage $galleryImage) {
-    abort_unless(auth()->check(), 403);
-
     return Storage::response($galleryImage->path);
-})->name('gallery.image');
+})->middleware(Authenticate::class)->name('gallery.image');

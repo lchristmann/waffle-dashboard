@@ -576,3 +576,15 @@ Some helpful documentation pages:
 > - `2e3d28ab`: `feat: make timezone configurable, have last waffle day only as DatePickers default when within last 7 days`
 > - `c98929aa`: `chore(deps): composer update (filament public assets)`
 > - `d70d5874`: `feat(lang)+docs+release: v2.3.0, add German localization and a language switch, document how to add new languages`
+
+## 29. Replace Nginx Web Server with Angie (`v2.4.0`)
+
+- replace the [Nginx](https://nginx.org/) web server with [Angie](https://en.angie.software/angie/), a fork created by former nginx developers
+  - it's [fully compatible with Nginx, but has more features](https://en.angie.software/news/articles/shodstva-i-razlichiya-angie-i-nginx/) with a special focus on "speed, ease of configuration, and monitoring convenience" 
+
+Some helpful documentation pages:
+
+- https://en.angie.software/angie/docs/installation/docker/
+- https://en.angie.software/angie/docs/configuration/migration/
+- https://en.angie.software/angie/docs/configuration/configfile/
+- https://en.angie.software/angie/docs/configuration/modules/core/#include
