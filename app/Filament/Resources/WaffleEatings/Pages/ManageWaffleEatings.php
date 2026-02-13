@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\WaffleEatings\Pages;
 
 use App\Filament\Actions\WaffleEatingBulkCreateAction;
+use App\Filament\Actions\WaffleEatingCsvImportAction;
 use App\Filament\Resources\WaffleEatings\WaffleEatingResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ManageRecords;
@@ -23,6 +24,7 @@ class ManageWaffleEatings extends ManageRecords
                     return $data;
                 }),
             WaffleEatingBulkCreateAction::make(),
+            WaffleEatingCsvImportAction::make(),
         ];
     }
 }

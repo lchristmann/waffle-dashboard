@@ -30,6 +30,8 @@
 - [26. Always Have Backups!](#26-always-have-backups)
 - [27. Release `v2.2.0`](#27-release-v220)
 - [28. Add Multi-Language Support (`v2.3.0`)](#28-add-multi-language-support-v230)
+- [29. Replace Nginx Web Server with Angie (`v2.4.0`)](#29-replace-nginx-web-server-with-angie-v240)
+- [30. Add CSV Import for Waffle Eatings](#30-add-csv-import-for-waffle-eatings)
 
 ## 1. New Laravel+Docker project
 
@@ -588,3 +590,17 @@ Some helpful documentation pages:
 - https://en.angie.software/angie/docs/configuration/migration/
 - https://en.angie.software/angie/docs/configuration/configfile/
 - https://en.angie.software/angie/docs/configuration/modules/core/#include
+
+> Commits:
+>
+> - `a27d107f`: `setup+release: v2.4.0, replace nginx with angie`
+
+## 30. Add CSV Import for Waffle Eatings
+
+- add a header action on the WaffleEatings resource page to bulk create entries from a CSV file
+
+Some helpful documentation pages:
+
+- https://www.php.net/manual/en/function.file.php
+- https://www.php.net/manual/de/function.str-getcsv.php
+- https://filamentphp.com/docs/4.x/notifications/overview
