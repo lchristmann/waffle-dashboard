@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\GalleryImage;
+use App\Models\User;
 use Filament\Http\Middleware\Authenticate;
 use Illuminate\Support\Facades\Route;
 
@@ -52,3 +53,9 @@ Route::get('/health', function () {
 Route::get('/gallery-images/{galleryImage}', function (GalleryImage $galleryImage) {
     return Storage::response($galleryImage->path);
 })->middleware(Authenticate::class)->name('gallery.image');
+
+// Secure (authenticated) user avatar delivery route
+Route::get('/user-avatar/{user}', function (User $user) {
+    abort_unless($user->avatar, 404);
+    return Storage::response($user->avatar);
+})->middleware(Authenticate::class)->name('user.avatar');

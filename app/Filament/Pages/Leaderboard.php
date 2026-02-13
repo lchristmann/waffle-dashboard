@@ -7,6 +7,7 @@ use App\Models\WaffleEating;
 use BackedEnum;
 use App\Models\User;
 use Filament\Pages\Page;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
@@ -84,6 +85,7 @@ class Leaderboard extends Page implements HasTable
                     ->map(fn (User $user) => [
                         'id' => $user->id,
                         'name' => $user->name,
+                        'avatar_url' => $user->avatar ? route('user.avatar', $user) : null,
                         'waffles_this_year' => (int) ($totals[$user->id] ?? 0),
                     ])
                     ->sortByDesc('waffles_this_year')
@@ -102,6 +104,7 @@ class Leaderboard extends Page implements HasTable
                         3 => '🥉',
                         default => (string) $record['rank'],
                     }),
+                ImageColumn::make('avatar_url')->label('')->circular(),
                 TextColumn::make('name')->label(__('User')),
                 TextColumn::make('waffles_this_year')->label(__('Waffles Eaten')),
             ])

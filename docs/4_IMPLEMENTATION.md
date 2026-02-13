@@ -32,6 +32,7 @@
 - [28. Add Multi-Language Support (`v2.3.0`)](#28-add-multi-language-support-v230)
 - [29. Replace Nginx Web Server with Angie (`v2.4.0`)](#29-replace-nginx-web-server-with-angie-v240)
 - [30. Add CSV Import for Waffle Eatings](#30-add-csv-import-for-waffle-eatings)
+- [31. Add Custom Profile Pictures (`v2.5.0`)](#31-add-custom-profile-pictures-v250)
 
 ## 1. New Laravel+Docker project
 
@@ -604,3 +605,23 @@ Some helpful documentation pages:
 - https://www.php.net/manual/en/function.file.php
 - https://www.php.net/manual/de/function.str-getcsv.php
 - https://filamentphp.com/docs/4.x/notifications/overview
+
+> Commits:
+>
+> - `7446e1b8`: `feat: add CSV file import for eaten waffles`
+
+## 31. Add Custom Profile Pictures (`v2.5.0`)
+
+- allow users to upload a custom profile picture from their profile page
+
+Some helpful documentation pages:
+
+- https://filamentphp.com/docs/4.x/users/overview#setting-up-user-avatars
+- https://filamentphp.com/docs/4.x/users/overview#customizing-the-authentication-features
+- https://filamentphp.com/docs/4.x/forms/file-upload#image-editor
+- https://filamentphp.com/docs/4.x/tables/columns/image
+
+> Commits:
+>
+> - `b9cc38b9`: `composer update: incl. filament 4.7`
+> - `...`: `feat+release: v2.5.0, add custom user profile pictures`
