@@ -57,5 +57,5 @@ Route::get('/gallery-images/{galleryImage}', function (GalleryImage $galleryImag
 // Secure (authenticated) user avatar delivery route
 Route::get('/user-avatar/{user}', function (User $user) {
     abort_unless($user->avatar, 404);
-    return Storage::response($user->avatar);
+    return Storage::response($user->avatar, headers: [ 'Cache-Control' => 'private, max-age=31536000', ]);
 })->middleware(Authenticate::class)->name('user.avatar');

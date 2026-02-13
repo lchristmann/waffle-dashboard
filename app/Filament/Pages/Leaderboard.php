@@ -85,7 +85,7 @@ class Leaderboard extends Page implements HasTable
                     ->map(fn (User $user) => [
                         'id' => $user->id,
                         'name' => $user->name,
-                        'avatar_url' => $user->avatar ? route('user.avatar', $user) : null,
+                        'avatar_url' => $user->getFilamentAvatarUrl(),
                         'waffles_this_year' => (int) ($totals[$user->id] ?? 0),
                     ])
                     ->sortByDesc('waffles_this_year')

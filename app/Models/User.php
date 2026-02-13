@@ -95,9 +95,12 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
 
     public function getFilamentAvatarUrl(): ?string
     {
-        return $this->avatar
-            ? route('user.avatar', $this)
-            : null;
+        if (!$this->avatar) return null; // fallback to ui-avatars
+
+        // add this last updated timestamp to the url to bust the cache when user (possibly the avatar!) is updated
+        $timestamp = $this->updated_at?->timestamp ?? now()->timestamp;
+
+        return route('user.avatar', ['user' => $this->id, 'v' => $timestamp]);
     }
 
     protected static function booted(): void

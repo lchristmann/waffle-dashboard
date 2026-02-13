@@ -624,4 +624,5 @@ Some helpful documentation pages:
 > Commits:
 >
 > - `b9cc38b9`: `composer update: incl. filament 4.7`
-> - `...`: `feat+release: v2.5.0, add custom user profile pictures`
+> - `a763c53b`: `feat+release: v2.5.0, add custom user profile pictures`
+> - `...`: `fix+release: v2.5.0, cache user avatars & bust the cache on updated`
